@@ -10,33 +10,82 @@ import com.mycompany.pizzaexpress.backend.crudIntefaces.EliminacionEntidad;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.LecturaEntidad;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- * claseDB va servir para realizar las querys en la db unicamente desupés que hayan sido verificados los valores
+ * claseDB va servir para realizar las querys en la db unicamente desupés que
+ * hayan sido verificados los valores
+ *
  * @author edu
  */
-public class SucursalesDB extends GenericDB implements CreacionEntidad<Sucursal>,EdicionEntidad<Sucursal>,EliminacionEntidad,LecturaEntidad <Sucursal> {
+public class SucursalesDB extends GenericDB implements CreacionEntidad<Sucursal>, EdicionEntidad<Sucursal>, EliminacionEntidad, LecturaEntidad<Sucursal> {
 
-    @Override
-    public void crearEntidad(Sucursal entidad) throws ExceptionGenerica {
-       
+    private static final String INSERT = "INSERT INTO sucursal (nombre, ubicacion) VALUES (?, ?)";
+    private static final String UPDATE = "UPDATE sucursal SET nombre = ?, ubicacion = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM sucursal WHERE id = ?";
+    private static final String SELECT_BY_ID = "SELECT * FROM sucursal WHERE id = ?";
+    private static final String SELECT_BY_NAME = "SELECT * FROM sucursal WHERE nombre = ?";
+    
+    public boolean yaExiste(String nombre) throws ExceptionGenerica {
+        return this.existeEntidadByString(nombre, SELECT_BY_NAME);
     }
 
     @Override
-    public void editarEntidad(Sucursal entidad) throws ExceptionGenerica {
-        
+    public void create(Sucursal entidad) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(INSERT)) {
+            stmt.setString(1, entidad.getNombre());
+            stmt.setString(2, entidad.getUbicacion());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al crear sucursal: " + e.getMessage());
+        }
     }
 
     @Override
-    public void eliminarEntidad(int id) throws ExceptionGenerica {
-        
+    public void update(Sucursal entidad) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(UPDATE)) {
+            stmt.setString(1, entidad.getNombre());
+            stmt.setString(2, entidad.getUbicacion());
+            stmt.setInt(3, entidad.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al editar sucursal: " + e.getMessage());
+        }
     }
 
     @Override
-    public Sucursal leerEntidad(int id) throws ExceptionGenerica {
+    public void delete(int id) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(DELETE)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al eliminar sucursal: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Sucursal read(int id) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return extraer(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al leer sucursal: " + e.getMessage());
+        }
         return null;
     }
-    
 
-
+    private Sucursal extraer(ResultSet result) throws SQLException {
+        return new Sucursal(
+                result.getString("ubicacion"),
+                result.getString("nombre"),
+                result.getInt("id")
+        );
+    }
 }

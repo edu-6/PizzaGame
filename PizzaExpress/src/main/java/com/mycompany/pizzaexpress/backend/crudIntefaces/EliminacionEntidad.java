@@ -19,6 +19,6 @@ public interface EliminacionEntidad {
      * @throws com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica
      * @throws ExceptionGenerica
      */
-    public void eliminarEntidad(int id) throws ExceptionGenerica;
+    public void delete(int id) throws ExceptionGenerica;
     
 }

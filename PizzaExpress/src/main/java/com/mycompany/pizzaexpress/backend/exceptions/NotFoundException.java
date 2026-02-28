@@ -10,9 +10,9 @@ import com.mycompany.pizzaexpress.backend.db.GenericDB;
  *
  * @author edu
  */
-public class EntidadDuplicadaException extends ExceptionGenerica {
+public class NotFoundException extends ExceptionGenerica {
 
-    public EntidadDuplicadaException(String message) {
+    public NotFoundException(String message) {
         super(message);
     }
 

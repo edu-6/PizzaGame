@@ -10,10 +10,10 @@ import com.mycompany.pizzaexpress.backend.db.GenericDB;
  *
  * @author edu
  */
-public class EntidadDuplicadaException extends ExceptionGenerica {
+public class DatosMuyLargosException extends ExceptionGenerica {
 
-    public EntidadDuplicadaException(String message) {
-        super(message);
+    public DatosMuyLargosException() {
+        super("Los campos excedene el numero de caracteres");
     }
 
     

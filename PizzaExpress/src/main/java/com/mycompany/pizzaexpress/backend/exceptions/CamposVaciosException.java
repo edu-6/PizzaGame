@@ -10,10 +10,10 @@ import com.mycompany.pizzaexpress.backend.db.GenericDB;
  *
  * @author edu
  */
-public class EntidadDuplicadaException extends ExceptionGenerica {
+public class CamposVaciosException extends ExceptionGenerica {
 
-    public EntidadDuplicadaException(String message) {
-        super(message);
+    public CamposVaciosException() {
+        super("Rellene todos los  campos");
     }
 
     

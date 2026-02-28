@@ -11,5 +11,5 @@ import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
  * @author edu
  */
 public interface EdicionEntidad <T>{
-    public void  editarEntidad(T entidad) throws ExceptionGenerica;
+    public void  update(T entidad) throws ExceptionGenerica;
 }

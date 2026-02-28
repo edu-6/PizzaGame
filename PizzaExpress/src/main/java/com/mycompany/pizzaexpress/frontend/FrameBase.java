@@ -4,6 +4,10 @@
  */
 package com.mycompany.pizzaexpress.frontend;
 
+import com.mycompany.pizzaexpress.frontend.panels_por_rol.AdminSucursalPanel;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
 /**
  *
  * @author edu
@@ -17,6 +21,10 @@ public class FrameBase extends javax.swing.JFrame {
      */
     public FrameBase() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setSize(new Dimension(700,700));
+        this.setLayout(new BorderLayout());
+        this.add(new AdminSucursalPanel(), BorderLayout.CENTER);
     }
 
     @SuppressWarnings("unchecked")

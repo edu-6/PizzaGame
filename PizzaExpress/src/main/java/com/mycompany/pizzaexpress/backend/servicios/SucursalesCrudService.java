@@ -79,5 +79,20 @@ public class SucursalesCrudService implements CreacionEntidad<Sucursal>, Edicion
         return sucursal;
 
     }
+    
+    
+    public Sucursal getSucursalByName(String nombre) throws ExceptionGenerica {
+        Sucursal sucursal = db.selectByName(nombre);
+        if (sucursal == null) {
+            throw new NotFoundException("No se encontró ninguna sucursal con nombre: " + nombre);
+        }
+        return sucursal;
+
+    }
+    
+    
+    
+            
+            
 
 }

@@ -47,4 +47,11 @@ public class Sucursal {
                 && ubicacion.length() <= 255;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    
+    
+
 }

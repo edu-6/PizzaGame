@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 public class NuevaSucursalPanel extends javax.swing.JPanel {
 
     private JPanel parent;
+    private Sucursal sucursal;
 
     /**
      * Creates new form NuevaSucursalPanel
@@ -29,6 +30,7 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
     public NuevaSucursalPanel(JPanel panel, Sucursal sc) {
         this.iniciarPanel(panel);
         this.rellenarCampos(sc);
+        this.sucursal = sc;
     }
 
     private void iniciarPanel(JPanel panel) {
@@ -140,11 +142,16 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // realmente guardar
-
         SucursalesCrudService crud = new SucursalesCrudService();
         Sucursal nueva = new Sucursal(this.ubicacionTexto.getText(), this.nombreTexto.getText());
         try {
-            crud.create(nueva);
+            if(this.sucursal == null){
+                crud.create(nueva);
+            }else{
+                nueva.setId(sucursal.getId());
+                crud.update(nueva);
+            }
+            
             this.desparecer();
         } catch (ExceptionGenerica ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());

@@ -4,6 +4,7 @@
  */
 package com.mycompany.pizzaexpress.backend.db;
 
+import com.mycompany.pizzaexpress.backend.crudIntefaces.BuscarTodos;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.CreacionEntidad;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.EdicionEntidad;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.EliminacionEntidad;
@@ -14,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * claseDB va servir para realizar las querys en la db unicamente desupés que
@@ -21,13 +23,14 @@ import java.sql.SQLException;
  *
  * @author edu
  */
-public class SucursalesDB extends GenericDB implements CreacionEntidad<Sucursal>, EdicionEntidad<Sucursal>, EliminacionEntidad, LecturaEntidad<Sucursal> {
+public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, CreacionEntidad<Sucursal>, EdicionEntidad<Sucursal>, EliminacionEntidad, LecturaEntidad<Sucursal> {
 
     private static final String INSERT = "INSERT INTO sucursal (nombre, ubicacion) VALUES (?, ?)";
     private static final String UPDATE = "UPDATE sucursal SET nombre = ?, ubicacion = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM sucursal WHERE id = ?";
     private static final String SELECT_BY_ID = "SELECT * FROM sucursal WHERE id = ?";
     private static final String SELECT_BY_NAME = "SELECT * FROM sucursal WHERE nombre = ?";
+    private static final String SELECT_ALL = "SELECT * FROM sucursal ";
     
     public boolean yaExiste(String nombre) throws ExceptionGenerica {
         return this.existeEntidadByString(nombre, SELECT_BY_NAME);
@@ -88,4 +91,38 @@ public class SucursalesDB extends GenericDB implements CreacionEntidad<Sucursal>
                 result.getInt("id")
         );
     }
+    
+    
+    
+    public Sucursal selectByName(String name) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_BY_NAME)) {
+            stmt.setString(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return extraer(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al leer sucursal: " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Sucursal> readAll() throws ExceptionGenerica {
+        ArrayList<Sucursal>  lista = new ArrayList();
+       try (Connection conn = ConexionDB.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(SELECT_ALL); 
+             ResultSet rs = stmt.executeQuery()) {
+            
+            while (rs.next()) {
+                lista.add(extraer(rs));
+            }
+            
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al obtener todas las sucursales: " + e.getMessage());
+        }
+        return lista;
+    }
+    
 }

@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS pizzaDB;
+CREATE DATABASE pizzaDB;
 USE pizzaDB;
 
 CREATE TABLE configuracion_global (
@@ -21,40 +21,20 @@ CREATE TABLE configuracion_punteos (
     pedido_incompleto INT NOT NULL
 );
 
-CREATE TABLE usuario (
-    nickname VARCHAR(50) PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    contraseña VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE super_admin (
-    nickname VARCHAR(50) PRIMARY KEY,
-    CONSTRAINT fk_super_admin_usuario FOREIGN KEY (nickname) 
-        REFERENCES usuario(nickname) ON DELETE CASCADE
-);
-
 CREATE TABLE sucursal (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     ubicacion VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE cocinero (
-    nickname_usuario VARCHAR(50) PRIMARY KEY,
-    id_sucursal INT NOT NULL,
-    CONSTRAINT fk_cocinero_usuario FOREIGN KEY (nickname_usuario) 
-        REFERENCES usuario(nickname) ON DELETE CASCADE,
-    CONSTRAINT fk_cocinero_sucursal FOREIGN KEY (id_sucursal) 
-        REFERENCES sucursal(id) ON DELETE CASCADE
-);
-
-CREATE TABLE admin_tienda (
-    nickname_usuario VARCHAR(50) PRIMARY KEY,
-    id_sucursal INT NOT NULL,
-    CONSTRAINT fk_admin_usuario FOREIGN KEY (nickname_usuario) 
-        REFERENCES usuario(nickname) ON DELETE CASCADE,
-    CONSTRAINT fk_admin_sucursal FOREIGN KEY (id_sucursal) 
-        REFERENCES sucursal(id) ON DELETE CASCADE
+CREATE TABLE usuario (
+    nickname VARCHAR(50) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    contraseña VARCHAR(255) NOT NULL,
+    rol VARCHAR(50)  NOT NULL,
+    id_sucursal INT NULL,
+    CONSTRAINT fk_usuario_sucursal FOREIGN KEY (id_sucursal) 
+        REFERENCES sucursal(id) ON DELETE SET NULL
 );
 
 CREATE TABLE producto (
@@ -83,8 +63,8 @@ CREATE TABLE partida (
     puntos_pedido_correcto INT NOT NULL DEFAULT 0,
     puntos_tiempo_optimo INT NOT NULL DEFAULT 0,
     puntos_bono_eficiencia INT NOT NULL DEFAULT 0,
-    CONSTRAINT fk_partida_cocinero FOREIGN KEY (id_cocinero) 
-        REFERENCES cocinero(nickname_usuario) ON DELETE CASCADE,
+    CONSTRAINT fk_partida_usuario FOREIGN KEY (id_cocinero) 
+        REFERENCES usuario(nickname) ON DELETE CASCADE,
     CONSTRAINT fk_partida_sucursal FOREIGN KEY (id_sucursal) 
         REFERENCES sucursal(id) ON DELETE CASCADE
 );

@@ -4,23 +4,30 @@
  */
 package com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin;
 
+import com.mycompany.pizzaexpress.frontend.FrameBase;
 import com.mycompany.pizzaexpress.frontend.sucursales.SucursalesPanel;
+import com.mycompany.pizzaexpress.frontend.usuarios.UsuariosPanel;
 import java.awt.BorderLayout;
 
 /**
  *
  * @author edu
  */
-public class PanelBase_SuperAdmin extends javax.swing.JPanel {
-
+public class SuperAdminBase extends javax.swing.JPanel {
+    private FrameBase padre;
     /**
      * Creates new form PanelBase_SuperAdmin
      */
-    public PanelBase_SuperAdmin() {
+    public SuperAdminBase(FrameBase padre) {
         initComponents();
        iniciarPanel();
+       this.padre = padre;
     }
     
+    
+    public void  cerrarSesion(){
+        this.padre.mostrarLogin();
+    }
     
     private void iniciarPanel(){
         this.setLayout(new BorderLayout());
@@ -29,6 +36,11 @@ public class PanelBase_SuperAdmin extends javax.swing.JPanel {
         this.repaint();
     }
     
+    
+    public void cambiarAUsuarios(){
+        limpiarFrame();
+        this.add(new UsuariosPanel(this), BorderLayout.CENTER);
+    }
     
     
     public void cambiarASucursales(){

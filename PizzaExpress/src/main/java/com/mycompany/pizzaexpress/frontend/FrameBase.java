@@ -5,7 +5,7 @@
 package com.mycompany.pizzaexpress.frontend;
 
 import com.mycompany.pizzaexpress.backend.modelos.Usuario;
-import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.PanelBase_SuperAdmin;
+import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.SuperAdminBase;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -23,16 +23,22 @@ public class FrameBase extends javax.swing.JFrame {
     public FrameBase() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setSize(new Dimension(700, 400));
-        this.setLayout(new BorderLayout());
-        this.add(new LoginPanel(this), BorderLayout.CENTER);
-        pintar();
+        mostrarLogin();
         //this.add(new AdminSucursalPanel(), BorderLayout.CENTER);
     }
 
     private void reiniciarFrame() {
         this.getContentPane().removeAll();
         this.setLayout(new BorderLayout());
+    }
+    
+    
+    public void mostrarLogin(){
+        reiniciarFrame();
+        this.setSize(new Dimension(700, 400));
+        this.setLayout(new BorderLayout());
+        this.add(new LoginPanel(this), BorderLayout.CENTER);
+        pintar();
     }
 
     private void pintar() {
@@ -43,7 +49,7 @@ public class FrameBase extends javax.swing.JFrame {
     public void cambiarPanel(Usuario usuarioLogueado) {
         reiniciarFrame();
         if (usuarioLogueado.getRol().equals("SUPER_ADMIN")) {
-            this.add(new PanelBase_SuperAdmin(), BorderLayout.CENTER);
+            this.add(new SuperAdminBase(this), BorderLayout.CENTER);
             pintar();
 
         }

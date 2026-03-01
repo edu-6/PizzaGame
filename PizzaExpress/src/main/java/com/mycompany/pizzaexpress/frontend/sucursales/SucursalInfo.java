@@ -7,7 +7,6 @@ package com.mycompany.pizzaexpress.frontend.sucursales;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
 import com.mycompany.pizzaexpress.backend.servicios.SucursalesCrudService;
-import com.mycompany.pizzaexpress.frontend.panels_por_rol.AdminSucursalPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -16,7 +15,7 @@ import javax.swing.JPanel;
  * @author edu
  */
 public class SucursalInfo extends javax.swing.JPanel {
-    private AdminSucursalPanel panelPadre2;
+    private SucursalesPanel panelPadre2;
     private JPanel panelPadre;
     private Sucursal sucursal;
     private SucursalesCrudService crudService = new SucursalesCrudService();
@@ -24,7 +23,7 @@ public class SucursalInfo extends javax.swing.JPanel {
     /**
      * Creates new form TablaSucursales
      */
-    public SucursalInfo(Sucursal sucursal, JPanel padre,AdminSucursalPanel padre2 ) {
+    public SucursalInfo(Sucursal sucursal, JPanel padre,SucursalesPanel padre2 ) {
         initComponents();
         this.panelPadre = padre;
         this.panelPadre2 = padre2;

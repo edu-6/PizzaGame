@@ -4,7 +4,8 @@
  */
 package com.mycompany.pizzaexpress.frontend;
 
-import com.mycompany.pizzaexpress.frontend.panels_por_rol.AdminSucursalPanel;
+import com.mycompany.pizzaexpress.backend.modelos.Usuario;
+import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.PanelBase_SuperAdmin;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -13,8 +14,8 @@ import java.awt.Dimension;
  * @author edu
  */
 public class FrameBase extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrameBase.class.getName());
+
+   
 
     /**
      * Creates new form FrameBase
@@ -22,10 +23,34 @@ public class FrameBase extends javax.swing.JFrame {
     public FrameBase() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setSize(new Dimension(700,700));
+        this.setSize(new Dimension(700, 400));
         this.setLayout(new BorderLayout());
-        this.add(new AdminSucursalPanel(), BorderLayout.CENTER);
+        this.add(new LoginPanel(this), BorderLayout.CENTER);
+        pintar();
+        //this.add(new AdminSucursalPanel(), BorderLayout.CENTER);
     }
+
+    private void reiniciarFrame() {
+        this.getContentPane().removeAll();
+        this.setLayout(new BorderLayout());
+    }
+
+    private void pintar() {
+        this.revalidate();
+        this.repaint();
+    }
+
+    public void cambiarPanel(Usuario usuarioLogueado) {
+        reiniciarFrame();
+        if (usuarioLogueado.getRol().equals("SUPER_ADMIN")) {
+            this.add(new PanelBase_SuperAdmin(), BorderLayout.CENTER);
+            pintar();
+
+        }
+    }
+    
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

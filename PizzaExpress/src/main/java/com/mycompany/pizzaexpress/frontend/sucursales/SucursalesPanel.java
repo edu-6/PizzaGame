@@ -2,13 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.mycompany.pizzaexpress.frontend.panels_por_rol;
+package com.mycompany.pizzaexpress.frontend.sucursales;
 
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
 import com.mycompany.pizzaexpress.backend.servicios.SucursalesCrudService;
-import com.mycompany.pizzaexpress.frontend.sucursales.NuevaSucursalPanel;
-import com.mycompany.pizzaexpress.frontend.sucursales.SucursalInfo;
+import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.PanelBase_SuperAdmin;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JOptionPane;
@@ -17,17 +16,19 @@ import javax.swing.JOptionPane;
  *
  * @author edu
  */
-public class AdminSucursalPanel extends javax.swing.JPanel {
+public class SucursalesPanel extends javax.swing.JPanel {
 
     private SucursalesCrudService crudService = new SucursalesCrudService();
+     private PanelBase_SuperAdmin padre;
 
     /**
      * Creates new form AdminSucursalPanel
      */
-    public AdminSucursalPanel() {
+    public SucursalesPanel(PanelBase_SuperAdmin padre) {
+        this.padre = padre;
         initComponents();
         this.setLayout(new BorderLayout());
-        this.add(this.nueva, BorderLayout.NORTH);
+        //this.add(this.nueva, BorderLayout.NORTH);
         this.add(this.jPanel1, BorderLayout.CENTER);
     }
 
@@ -52,28 +53,19 @@ public class AdminSucursalPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         barraMenu = new javax.swing.JMenuBar();
-        nueva = new javax.swing.JMenu();
         jPanel1 = new javax.swing.JPanel();
         barraBusqeuda = new javax.swing.JTextField();
         buscarBtn = new javax.swing.JButton();
         panelResultados = new javax.swing.JPanel();
         mostrarTodos = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         barraMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 barraMenuMouseClicked(evt);
             }
         });
-
-        nueva.setBorder(new javax.swing.border.MatteBorder(null));
-        nueva.setText("Nueva sucursal");
-        nueva.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                nuevaMouseClicked(evt);
-            }
-        });
-        nueva.addActionListener(this::nuevaActionPerformed);
-        barraMenu.add(nueva);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 204));
 
@@ -103,18 +95,32 @@ public class AdminSucursalPanel extends javax.swing.JPanel {
         mostrarTodos.setText("Todos");
         mostrarTodos.addActionListener(this::mostrarTodosActionPerformed);
 
+        jButton1.setBackground(new java.awt.Color(51, 102, 255));
+        jButton1.setForeground(new java.awt.Color(0, 0, 0));
+        jButton1.setText("Nueva sucursal");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        jButton2.setBackground(new java.awt.Color(255, 51, 51));
+        jButton2.setForeground(new java.awt.Color(0, 0, 0));
+        jButton2.setText("Regresar");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(65, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(barraBusqeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buscarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mostrarTodos, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addContainerGap(29, Short.MAX_VALUE))
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -122,10 +128,13 @@ public class AdminSucursalPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(barraBusqeuda, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                    .addComponent(buscarBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(mostrarTodos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(12, 12, 12)
+                    .addComponent(buscarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(barraBusqeuda, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(mostrarTodos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(9, 9, 9)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -147,23 +156,9 @@ public class AdminSucursalPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_barraBusqeudaActionPerformed
 
-    private void nuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaActionPerformed
-
-    }//GEN-LAST:event_nuevaActionPerformed
-
     private void barraMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_barraMenuMouseClicked
 
     }//GEN-LAST:event_barraMenuMouseClicked
-
-    private void nuevaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nuevaMouseClicked
-        this.panelResultados.removeAll();
-        this.panelResultados.setLayout(new BorderLayout());
-        this.panelResultados.add(new NuevaSucursalPanel(this.panelResultados), BorderLayout.NORTH);
-        this.panelResultados.revalidate();
-        this.panelResultados.repaint();
-        this.revalidate();
-        this.repaint();
-    }//GEN-LAST:event_nuevaMouseClicked
 
     private void mostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarTodosActionPerformed
 
@@ -184,14 +179,29 @@ public class AdminSucursalPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buscarBtnActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.panelResultados.removeAll();
+        this.panelResultados.setLayout(new BorderLayout());
+        this.panelResultados.add(new NuevaSucursalPanel(this.panelResultados), BorderLayout.NORTH);
+        this.panelResultados.revalidate();
+        this.panelResultados.repaint();
+        this.revalidate();
+        this.repaint();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.padre.regresar();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barraBusqeuda;
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JButton buscarBtn;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton mostrarTodos;
-    private javax.swing.JMenu nueva;
     private javax.swing.JPanel panelResultados;
     // End of variables declaration//GEN-END:variables
 }

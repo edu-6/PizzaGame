@@ -4,6 +4,7 @@
  */
 package com.mycompany.pizzaexpress.backend.db;
 
+import com.mycompany.pizzaexpress.backend.exceptions.CamposVaciosException;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.Usuario;
 import java.sql.Connection;
@@ -21,6 +22,10 @@ public class LoginDB extends GenericDB {
     private static final String NOMBRE_SUCURSAL = "SELECT nombre FROM sucursal WHERE id = ?";
 
     public Usuario loguear(String nickname, String contraseña) throws ExceptionGenerica {
+        
+        if(nickname.isBlank() || contraseña.isBlank()){
+            throw new CamposVaciosException();
+        }
         Usuario usuario = null;
 
         try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(LOGIN_USUARIO)) {

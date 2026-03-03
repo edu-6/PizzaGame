@@ -4,6 +4,7 @@
  */
 package com.mycompany.pizzaexpress.backend.servicios;
 
+import com.mycompany.pizzaexpress.backend.crudIntefaces.BuscarTodos;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.CreacionEntidad;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.EdicionEntidad;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.EliminacionEntidad;
@@ -15,6 +16,7 @@ import com.mycompany.pizzaexpress.backend.exceptions.EntidadDuplicadaException;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.exceptions.NotFoundException;
 import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
+import java.util.ArrayList;
 
 /**
  * la clase crud service va servir para hacer las validaciones antes de proceder
@@ -22,7 +24,8 @@ import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
  *
  * @author edu
  */
-public class SucursalesCrudService implements CreacionEntidad<Sucursal>, EdicionEntidad<Sucursal>, EliminacionEntidad, LecturaEntidad<Sucursal> {
+public class SucursalesCrudService implements CreacionEntidad<Sucursal>, EdicionEntidad<Sucursal>, EliminacionEntidad,
+        BuscarTodos<Sucursal>, LecturaEntidad<Sucursal> {
 
     private final SucursalesDB db = new SucursalesDB();
 
@@ -89,10 +92,9 @@ public class SucursalesCrudService implements CreacionEntidad<Sucursal>, Edicion
         return sucursal;
 
     }
-    
-    
-    
-            
-            
 
+    @Override
+    public ArrayList<Sucursal> seleccionarTodos() throws ExceptionGenerica {
+        return db.seleccionarTodos();
+    }
 }

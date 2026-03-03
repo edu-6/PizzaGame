@@ -19,22 +19,24 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
 
     private JPanel parent;
     private Sucursal sucursal;
+    private SucursalesPanel panelPadre;
 
     /**
      * Creates new form NuevaSucursalPanel
      */
-    public NuevaSucursalPanel(JPanel panel) {
-        this.iniciarPanel(panel);
+    public NuevaSucursalPanel(JPanel panel, SucursalesPanel panelPadre) {
+        this.iniciarPanel(panel, panelPadre);
     }
 
-    public NuevaSucursalPanel(JPanel panel, Sucursal sc) {
-        this.iniciarPanel(panel);
+    public  NuevaSucursalPanel(JPanel panel, Sucursal sc, SucursalesPanel panelPadre) {
+        this.iniciarPanel(panel, panelPadre);
         this.rellenarCampos(sc);
         this.sucursal = sc;
     }
 
-    private void iniciarPanel(JPanel panel) {
+    private void iniciarPanel(JPanel panel, SucursalesPanel panelPadre) {
         initComponents();
+        this.panelPadre = panelPadre;
         this.parent = panel;
         this.setSize(new Dimension(650, 320));
     }
@@ -150,6 +152,7 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
             }else{
                 nueva.setId(sucursal.getId());
                 crud.editar(nueva);
+                this.panelPadre.actualizarUltimaBusqueda();// para atualizar el panel 
             }
             
             this.desparecer();

@@ -9,8 +9,12 @@ import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
 import com.mycompany.pizzaexpress.backend.servicios.SucursalesCrudService;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.SuperAdminBase;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.util.ArrayList;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -19,7 +23,8 @@ import javax.swing.JOptionPane;
 public class SucursalesPanel extends javax.swing.JPanel {
 
     private SucursalesCrudService crudService = new SucursalesCrudService();
-     private SuperAdminBase padre;
+    private SuperAdminBase padre;
+    private boolean ultimaBusquedaEsTodo;
 
     /**
      * Creates new form AdminSucursalPanel
@@ -33,15 +38,82 @@ public class SucursalesPanel extends javax.swing.JPanel {
     }
 
     public void mostrarSucursalForm(Sucursal sucursal) {
-        this.panelResultados.removeAll();
-        this.panelResultados.setLayout(new BorderLayout());
-        this.panelResultados.add(new NuevaSucursalPanel(this.panelResultados, sucursal), BorderLayout.NORTH);
-        this.panelResultados.revalidate();
-        this.panelResultados.repaint();
+        this.formularioPanel.removeAll();
+        this.formularioPanel.setLayout(new BorderLayout());
+        this.formularioPanel.add(new NuevaSucursalPanel(this.formularioPanel, sucursal, this), BorderLayout.NORTH);
+        this.formularioPanel.revalidate();
+        this.formularioPanel.repaint();
         this.revalidate();
         this.repaint();
     }
     
+    
+    public void  actualizarUltimaBusqueda(){
+        if(this.ultimaBusquedaEsTodo){
+            this.buscarTodos();
+        }else{
+            this.buscarPorString();
+        }   
+    }
+    
+    
+    
+    private void buscarPorString(){
+        this.ultimaBusquedaEsTodo = false;
+        if(this.barraBusqeuda.getText().isBlank()){
+            return;
+        }
+        try {
+            Sucursal sucursal = crudService.getSucursalByName(this.barraBusqeuda.getText());
+            ArrayList<Sucursal> lista = new ArrayList();
+            lista.add(sucursal);
+            this.mostrarResultados(lista);
+        } catch (ExceptionGenerica ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+        
+    }
+    
+    
+    private void buscarTodos(){
+        this.ultimaBusquedaEsTodo = true;
+        this.panelResultados.removeAll();
+        try {
+            ArrayList<Sucursal> lista = this.crudService.seleccionarTodos();
+            this.mostrarResultados(lista);
+            
+        } catch (ExceptionGenerica ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+    
+    
+    private void mostrarResultados(ArrayList<Sucursal> lista){
+        this.panelResultados.removeAll();
+        this.panelResultados.revalidate();
+        this.panelResultados.repaint();
+        JPanel contenedor = new JPanel();
+            contenedor.setLayout(new BoxLayout(contenedor, BoxLayout.Y_AXIS));
+            for (Sucursal sucursal : lista) {
+                SucursalInfo tarjeta = new SucursalInfo(sucursal, contenedor, this);
+                contenedor.add(tarjeta);
+                contenedor.add(Box.createVerticalStrut(10));
+            }
+
+            contenedor.revalidate();
+            contenedor.repaint();
+
+            JScrollPane scrollPane = new JScrollPane(contenedor);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            
+            panelResultados.setLayout(new BorderLayout());
+            panelResultados.add(scrollPane, BorderLayout.CENTER);
+            panelResultados.revalidate();
+            panelResultados.repaint();
+            this.revalidate();
+            this.repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -58,8 +130,9 @@ public class SucursalesPanel extends javax.swing.JPanel {
         buscarBtn = new javax.swing.JButton();
         panelResultados = new javax.swing.JPanel();
         mostrarTodos = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        nuevaBtn = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        formularioPanel = new javax.swing.JPanel();
 
         barraMenu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -83,11 +156,11 @@ public class SucursalesPanel extends javax.swing.JPanel {
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 484, Short.MAX_VALUE)
         );
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 433, Short.MAX_VALUE)
+            .addGap(0, 548, Short.MAX_VALUE)
         );
 
         mostrarTodos.setBackground(new java.awt.Color(153, 153, 153));
@@ -95,11 +168,11 @@ public class SucursalesPanel extends javax.swing.JPanel {
         mostrarTodos.setText("Todos");
         mostrarTodos.addActionListener(this::mostrarTodosActionPerformed);
 
-        jButton1.setBackground(new java.awt.Color(51, 102, 255));
-        jButton1.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
-        jButton1.setText("Nueva sucursal");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        nuevaBtn.setBackground(new java.awt.Color(51, 102, 255));
+        nuevaBtn.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        nuevaBtn.setForeground(new java.awt.Color(0, 0, 0));
+        nuevaBtn.setText("Nueva sucursal");
+        nuevaBtn.addActionListener(this::nuevaBtnActionPerformed);
 
         jButton2.setBackground(new java.awt.Color(255, 51, 51));
         jButton2.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
@@ -107,13 +180,24 @@ public class SucursalesPanel extends javax.swing.JPanel {
         jButton2.setText("Regresar");
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
+        javax.swing.GroupLayout formularioPanelLayout = new javax.swing.GroupLayout(formularioPanel);
+        formularioPanel.setLayout(formularioPanelLayout);
+        formularioPanelLayout.setHorizontalGroup(
+            formularioPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        formularioPanelLayout.setVerticalGroup(
+            formularioPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(142, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addContainerGap(179, Short.MAX_VALUE)
+                .addComponent(nuevaBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(barraBusqeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -122,8 +206,11 @@ public class SucursalesPanel extends javax.swing.JPanel {
                 .addComponent(mostrarTodos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addContainerGap(142, Short.MAX_VALUE))
-            .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(178, 178, 178))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(formularioPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,12 +219,14 @@ public class SucursalesPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(barraBusqeuda)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(nuevaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(mostrarTodos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buscarBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(15, 15, 15)
-                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(16, 16, 16)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(formularioPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -148,10 +237,10 @@ public class SucursalesPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -164,33 +253,22 @@ public class SucursalesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_barraMenuMouseClicked
 
     private void mostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarTodosActionPerformed
-
+        this.buscarTodos();
     }//GEN-LAST:event_mostrarTodosActionPerformed
 
     private void buscarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarBtnActionPerformed
-        try {
-            Sucursal sucursal = crudService.getSucursalByName(this.barraBusqeuda.getText());
-            this.panelResultados.removeAll();
-            this.panelResultados.setLayout(new FlowLayout());
-            this.panelResultados.add(new SucursalInfo(sucursal, this.panelResultados, this));
-            this.panelResultados.revalidate();
-            this.panelResultados.repaint();
-            this.revalidate();
-            this.repaint();
-        } catch (ExceptionGenerica ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        this.buscarPorString();
     }//GEN-LAST:event_buscarBtnActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.panelResultados.removeAll();
-        this.panelResultados.setLayout(new BorderLayout());
-        this.panelResultados.add(new NuevaSucursalPanel(this.panelResultados), BorderLayout.NORTH);
-        this.panelResultados.revalidate();
-        this.panelResultados.repaint();
+    private void nuevaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaBtnActionPerformed
+        this.formularioPanel.removeAll();
+        this.formularioPanel.setLayout(new BorderLayout());
+        this.formularioPanel.add(new NuevaSucursalPanel(this.formularioPanel, this), BorderLayout.NORTH);
+        this.formularioPanel.revalidate();
+        this.formularioPanel.repaint();
         this.revalidate();
         this.repaint();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_nuevaBtnActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.padre.regresar();
@@ -201,10 +279,11 @@ public class SucursalesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField barraBusqeuda;
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JButton buscarBtn;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel formularioPanel;
     private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton mostrarTodos;
+    private javax.swing.JButton nuevaBtn;
     private javax.swing.JPanel panelResultados;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,5 +12,5 @@ import java.util.ArrayList;
  * @author edu
  */
 public interface BuscarTodos <T>{
-    public ArrayList<T> readAll() throws ExceptionGenerica;
+    public ArrayList<T> seleccionarTodos() throws ExceptionGenerica;
 }

@@ -5,20 +5,15 @@
 package com.mycompany.pizzaexpress.backend.crudIntefaces;
 
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
+import java.util.ArrayList;
 
 /**
  *
  * @author edu
- * @param <T>
  */
-public interface EliminacionEntidad {
+// es una iterefaz que permite buscar armando una clase  con parametros y luego usandola para buscarlo 
+public interface BusquedaParametrica <B,A> {
     
-    /**
-     *
-     * @param id
-     * @throws com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica
-     * @throws ExceptionGenerica
-     */
-    public void eliminar(int id) throws ExceptionGenerica;
+     public ArrayList<A> buscarVariosConFiltro(B busqueda) throws ExceptionGenerica;
     
 }

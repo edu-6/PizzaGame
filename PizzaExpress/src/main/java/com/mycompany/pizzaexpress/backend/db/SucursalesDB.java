@@ -25,20 +25,20 @@ import java.util.ArrayList;
  */
 public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, CreacionEntidad<Sucursal>, EdicionEntidad<Sucursal>, EliminacionEntidad, LecturaEntidad<Sucursal> {
 
-    private static final String INSERT = "INSERT INTO sucursal (nombre, ubicacion) VALUES (?, ?)";
-    private static final String UPDATE = "UPDATE sucursal SET nombre = ?, ubicacion = ? WHERE id = ?";
-    private static final String DELETE = "DELETE FROM sucursal WHERE id = ?";
-    private static final String SELECT_BY_ID = "SELECT * FROM sucursal WHERE id = ?";
-    private static final String SELECT_BY_NAME = "SELECT * FROM sucursal WHERE nombre = ?";
-    private static final String SELECT_ALL = "SELECT * FROM sucursal ";
+    private static final String CREAR = "INSERT INTO sucursal (nombre, ubicacion) VALUES (?, ?)";
+    private static final String ACTUALIZAR = "UPDATE sucursal SET nombre = ?, ubicacion = ? WHERE id = ?";
+    private static final String ELIMINAR = "DELETE FROM sucursal WHERE id = ?";
+    private static final String BUSCAR_POR_ID = "SELECT * FROM sucursal WHERE id = ?";
+    private static final String BUSCAR_POR_NOMBRE = "SELECT * FROM sucursal WHERE nombre = ?";
+    private static final String SELECCIONAR_TODOS = "SELECT * FROM sucursal ";
     
     public boolean yaExiste(String nombre) throws ExceptionGenerica {
-        return this.existeEntidadByString(nombre, SELECT_BY_NAME);
+        return this.existeEntidadByString(nombre, BUSCAR_POR_NOMBRE);
     }
 
     @Override
-    public void create(Sucursal entidad) throws ExceptionGenerica {
-        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(INSERT)) {
+    public void crear(Sucursal entidad) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(CREAR)) {
             stmt.setString(1, entidad.getNombre());
             stmt.setString(2, entidad.getUbicacion());
             stmt.executeUpdate();
@@ -48,8 +48,8 @@ public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, Cr
     }
 
     @Override
-    public void update(Sucursal entidad) throws ExceptionGenerica {
-        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(UPDATE)) {
+    public void editar(Sucursal entidad) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(ACTUALIZAR)) {
             stmt.setString(1, entidad.getNombre());
             stmt.setString(2, entidad.getUbicacion());
             stmt.setInt(3, entidad.getId());
@@ -60,8 +60,8 @@ public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, Cr
     }
 
     @Override
-    public void delete(int id) throws ExceptionGenerica {
-        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(DELETE)) {
+    public void eliminar(int id) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(ELIMINAR)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -70,8 +70,8 @@ public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, Cr
     }
 
     @Override
-    public Sucursal read(int id) throws ExceptionGenerica {
-        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID)) {
+    public Sucursal buscar(int id) throws ExceptionGenerica {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(BUSCAR_POR_ID)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -95,7 +95,7 @@ public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, Cr
     
     
     public Sucursal selectByName(String name) throws ExceptionGenerica {
-        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_BY_NAME)) {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(BUSCAR_POR_NOMBRE)) {
             stmt.setString(1, name);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -109,10 +109,10 @@ public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, Cr
     }
 
     @Override
-    public ArrayList<Sucursal> readAll() throws ExceptionGenerica {
+    public ArrayList<Sucursal> seleccionarTodos() throws ExceptionGenerica {
         ArrayList<Sucursal>  lista = new ArrayList();
        try (Connection conn = ConexionDB.getConnection(); 
-             PreparedStatement stmt = conn.prepareStatement(SELECT_ALL); 
+             PreparedStatement stmt = conn.prepareStatement(SELECCIONAR_TODOS); 
              ResultSet rs = stmt.executeQuery()) {
             
             while (rs.next()) {

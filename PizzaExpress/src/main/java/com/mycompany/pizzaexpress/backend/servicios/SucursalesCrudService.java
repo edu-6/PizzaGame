@@ -27,7 +27,7 @@ public class SucursalesCrudService implements CreacionEntidad<Sucursal>, Edicion
     private final SucursalesDB db = new SucursalesDB();
 
     @Override
-    public void create(Sucursal entidad) throws ExceptionGenerica {
+    public void crear(Sucursal entidad) throws ExceptionGenerica {
         if (!entidad.datosCompletos()) {
             throw new CamposVaciosException();
         }
@@ -39,11 +39,11 @@ public class SucursalesCrudService implements CreacionEntidad<Sucursal>, Edicion
             throw new EntidadDuplicadaException("ya existe la sucursal con nombre " + entidad.getNombre());
         }
 
-        db.create(entidad);
+        db.crear(entidad);
     }
 
     @Override
-    public void update(Sucursal entidad) throws ExceptionGenerica {
+    public void editar(Sucursal entidad) throws ExceptionGenerica {
         if (!entidad.datosCompletos()) {
             throw new ExceptionGenerica("Rellene los campos ");
         }
@@ -55,24 +55,24 @@ public class SucursalesCrudService implements CreacionEntidad<Sucursal>, Edicion
         /**
          * Se verifica que el nombre no sea el de alguna sucursal anterior
          */
-        Sucursal anterior = db.read(entidad.getId());
+        Sucursal anterior = db.buscar(entidad.getId());
         if (!anterior.getNombre().equals(entidad.getNombre())) { // si no son iguales los nombres
             if (db.yaExiste(entidad.getNombre())) {
                 throw new EntidadDuplicadaException("ya existe la sucursal con nombre " + entidad.getNombre());
             }
         }
 
-        db.update(entidad);
+        db.editar(entidad);
     }
 
     @Override
-    public void delete(int id) throws ExceptionGenerica {
-        db.delete(id);
+    public void eliminar(int id) throws ExceptionGenerica {
+        db.eliminar(id);
     }
 
     @Override
-    public Sucursal read(int id) throws ExceptionGenerica {
-        Sucursal sucursal = db.read(id);
+    public Sucursal buscar(int id) throws ExceptionGenerica {
+        Sucursal sucursal = db.buscar(id);
         if (sucursal == null) {
             throw new NotFoundException("No se encontró ninguna sucursal con el ID: " + id);
         }

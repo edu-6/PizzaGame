@@ -39,7 +39,7 @@ public class UsuarioForm extends javax.swing.JPanel {
      private void  cargarSucursales(){
         try {
             // cargar todas las sucursales
-            this.lista = sucursalesDB.readAll();
+            this.lista = sucursalesDB.seleccionarTodos();
             // cambiando de sucursales a nombres
             String[] nombres = lista.stream().map(s -> s.getNombre()) .toArray(String[]::new);
             // ondiendoselo al combo box 
@@ -226,10 +226,10 @@ public class UsuarioForm extends javax.swing.JPanel {
         Sucursal nueva = new Sucursal(this.ubicacionTexto.getText(), this.nombreTexto.getText());
         try {
             if(this.sucursal == null){
-                crud.create(nueva);
+                crud.crear(nueva);
             }else{
                 nueva.setId(sucursal.getId());
-                crud.update(nueva);
+                crud.editar(nueva);
             }
             
             this.desparecer();

@@ -124,7 +124,7 @@ public class SucursalInfo extends javax.swing.JPanel {
         int opcion = JOptionPane.showConfirmDialog(this, "Desea eliminar la sucursal?");
         if(opcion == JOptionPane.YES_OPTION){
             try {
-                this.crudService.delete(this.sucursal.getId());
+                this.crudService.eliminar(this.sucursal.getId());
                 this.panelPadre.removeAll();
                 this.panelPadre.repaint();
             } catch (ExceptionGenerica ex) {

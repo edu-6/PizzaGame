@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @param <T>
  */
 public interface LecturaEntidad <T>{
-    public  T read(int id) throws ExceptionGenerica;
+    public  T buscar(int id) throws ExceptionGenerica;
     /*
     public ArrayList<T> buscarEntidades(L busqueda) throws ExceptionGenerica;*/
 }

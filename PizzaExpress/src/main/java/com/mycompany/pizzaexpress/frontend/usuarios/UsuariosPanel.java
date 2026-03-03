@@ -38,7 +38,7 @@ public class UsuariosPanel extends javax.swing.JPanel {
     private void  cargarSucursales(){
         try {
             // cargar todas las sucursales
-            this.lista = sucursalesDB.readAll();
+            this.lista = sucursalesDB.seleccionarTodos();
             // cambiando de sucursales a nombres
             String[] nombres = lista.stream().map(s -> s.getNombre()) .toArray(String[]::new);
             // ondiendoselo al combo box 

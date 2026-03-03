@@ -146,10 +146,10 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
         Sucursal nueva = new Sucursal(this.ubicacionTexto.getText(), this.nombreTexto.getText());
         try {
             if(this.sucursal == null){
-                crud.create(nueva);
+                crud.crear(nueva);
             }else{
                 nueva.setId(sucursal.getId());
-                crud.update(nueva);
+                crud.editar(nueva);
             }
             
             this.desparecer();

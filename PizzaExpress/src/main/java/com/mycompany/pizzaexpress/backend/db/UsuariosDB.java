@@ -24,14 +24,12 @@ public class UsuariosDB extends GenericDB implements CreacionEntidad<Usuario>, E
     private static final String ACTUALIZAR = "UPDATE usuario SET nickname = ?, nombre = ?, contraseña = ?, rol = ?, id_sucursal = ? WHERE id = ?";
     private static final String ELIMINAR = "DELETE FROM usuario WHERE id = ?";
     private static final String BUSCAR_POR_ID = "SELECT u.*, s.nombre AS nombre_sucursal FROM usuario u LEFT JOIN sucursal s ON u.id_sucursal = s.id WHERE u.id = ?";
-    private static final String BUSCAR_POR_NOMBRE_O_NICKNAME = "SELECT usuario.*, sucursal.nombre AS nombre_sucursal FROM usuario LEFT JOIN sucursal ON usuario.id_sucursal = sucursal.id " +
-    "WHERE (usuario.nickname = ? OR usuario.nombre = ?)";
-    private static final String SELECCIONAR_TODOS = "SELECT u.*, s.nombre AS nombre_sucursal FROM usuario u LEFT JOIN sucursal s ON u.id_sucursal = s.id";
 
     public boolean nicknameYaExiste(String nickname) throws ExceptionGenerica {
         return this.existeEntidadByString(nickname, "SELECT nickname FROM usuario WHERE nickname = ?");
     }
 
+    @Override
     public void crear(Usuario entidad) throws ExceptionGenerica {
         try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(CREAR)) {
             stmt.setString(1, entidad.getNickname());
@@ -49,6 +47,7 @@ public class UsuariosDB extends GenericDB implements CreacionEntidad<Usuario>, E
         }
     }
 
+    @Override
     public void editar(Usuario entidad) throws ExceptionGenerica {
         try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(ACTUALIZAR)) {
             stmt.setString(1, entidad.getNickname());
@@ -67,6 +66,7 @@ public class UsuariosDB extends GenericDB implements CreacionEntidad<Usuario>, E
         }
     }
 
+    @Override
     public void eliminar(int id) throws ExceptionGenerica {
         try (Connection conn = ConexionDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(ELIMINAR)) {
             stmt.setInt(1, id);

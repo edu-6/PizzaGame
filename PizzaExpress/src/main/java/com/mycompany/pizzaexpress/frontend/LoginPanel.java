@@ -55,27 +55,27 @@ public class LoginPanel extends javax.swing.JPanel {
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel1.setFont(new java.awt.Font("Ubuntu Light", 0, 24)); // NOI18N
-        jLabel1.setText("Contraseña");
+        jLabel1.setFont(new java.awt.Font("Ubuntu Light", 0, 36)); // NOI18N
+        jLabel1.setText("Contraseña:");
 
-        jLabel2.setFont(new java.awt.Font("Ubuntu Light", 0, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Ubuntu Light", 0, 36)); // NOI18N
         jLabel2.setText("Usuario:");
 
-        usuarioTxt.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
+        usuarioTxt.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
 
         loginBtn.setBackground(new java.awt.Color(255, 204, 0));
-        loginBtn.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
+        loginBtn.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         loginBtn.setText("Login");
         loginBtn.addActionListener(this::loginBtnActionPerformed);
 
-        contraseñaTxt.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
+        contraseñaTxt.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
+                .addContainerGap(101, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -84,13 +84,13 @@ public class LoginPanel extends javax.swing.JPanel {
                             .addComponent(usuarioTxt)
                             .addComponent(loginBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
                             .addComponent(contraseñaTxt)))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(32, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
+                .addContainerGap(120, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(usuarioTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -100,7 +100,7 @@ public class LoginPanel extends javax.swing.JPanel {
                     .addComponent(contraseñaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

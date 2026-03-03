@@ -78,10 +78,10 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel1.setFont(new java.awt.Font("Ubuntu Light", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Ubuntu Light", 0, 36)); // NOI18N
         jLabel1.setText("Ubicacion:");
 
-        jLabel2.setFont(new java.awt.Font("Ubuntu Light", 0, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Ubuntu Light", 0, 36)); // NOI18N
         jLabel2.setText("Nombre:");
 
         nombreTexto.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
@@ -90,12 +90,12 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
         ubicacionTexto.addActionListener(this::ubicacionTextoActionPerformed);
 
         jButton1.setBackground(new java.awt.Color(255, 204, 0));
-        jButton1.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         jButton1.setText("Guardar");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton3.setBackground(new java.awt.Color(255, 102, 102));
-        jButton3.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
+        jButton3.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         jButton3.setText("Cancelar");
         jButton3.addActionListener(this::jButton3ActionPerformed);
 
@@ -104,7 +104,7 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(39, Short.MAX_VALUE)
+                .addContainerGap(150, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -114,8 +114,8 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
                             .addComponent(ubicacionTexto)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,7 +132,7 @@ public class NuevaSucursalPanel extends javax.swing.JPanel {
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(134, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

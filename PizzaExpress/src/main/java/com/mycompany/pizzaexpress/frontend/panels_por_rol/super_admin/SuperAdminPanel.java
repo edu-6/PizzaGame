@@ -43,7 +43,7 @@ public class SuperAdminPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(255, 255, 204));
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel2.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Reportes");
 
@@ -52,7 +52,7 @@ public class SuperAdminPanel extends javax.swing.JPanel {
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel3.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Sucursales");
 
@@ -61,7 +61,7 @@ public class SuperAdminPanel extends javax.swing.JPanel {
         sucursalesBtn.addActionListener(this::sucursalesBtnActionPerformed);
 
         jLabel4.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel4.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Usuarios");
 
@@ -70,7 +70,7 @@ public class SuperAdminPanel extends javax.swing.JPanel {
         jButton3.addActionListener(this::jButton3ActionPerformed);
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel5.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Ajustes");
 
@@ -79,7 +79,7 @@ public class SuperAdminPanel extends javax.swing.JPanel {
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jButton2.setBackground(new java.awt.Color(255, 51, 51));
-        jButton2.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
+        jButton2.setFont(new java.awt.Font("Fira Sans", 0, 48)); // NOI18N
         jButton2.setForeground(new java.awt.Color(0, 0, 0));
         jButton2.setText("Salir");
         jButton2.addActionListener(this::jButton2ActionPerformed);
@@ -130,8 +130,8 @@ public class SuperAdminPanel extends javax.swing.JPanel {
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(39, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

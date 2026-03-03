@@ -4,20 +4,61 @@
  */
 package com.mycompany.pizzaexpress.frontend.usuarios;
 
+import com.mycompany.pizzaexpress.backend.db.SucursalesDB;
+import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
+import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.SuperAdminBase;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author edu
  */
 public class UsuariosPanel extends javax.swing.JPanel {
-   private SuperAdminBase padre;
+
+    private SuperAdminBase padre;
+    private ArrayList<Sucursal> lista;
+    private SucursalesDB sucursalesDB = new SucursalesDB();
+
     /**
      * Creates new form UsuariosPanel
      */
     public UsuariosPanel(SuperAdminBase padre) {
         initComponents();
         this.padre = padre;
+        this.cargarSucursales();
+        this.cambiarVisivilidadSucursales(); // ocultar al inicio las sucursales
+
+    }
+    
+    
+    private void  cargarSucursales(){
+        try {
+            // cargar todas las sucursales
+            this.lista = sucursalesDB.readAll();
+            // cambiando de sucursales a nombres
+            String[] nombres = lista.stream().map(s -> s.getNombre()) .toArray(String[]::new);
+            // ondiendoselo al combo box 
+            DefaultComboBoxModel modelo = new DefaultComboBoxModel(nombres);
+            this.sucursalesBox.setModel(modelo);
+        } catch (ExceptionGenerica ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+    
+    private void cambiarVisivilidadSucursales(){
+        boolean valorDeVisidibilidad = false;
+        if(this.rolesBox.getSelectedIndex() >0){
+            valorDeVisidibilidad = true;
+        }
+        this.sucursalLbl.setVisible(valorDeVisidibilidad);
+        this.sucursalesBox.setVisible(valorDeVisidibilidad);
+        this.sucursalesBox.setEnabled(valorDeVisidibilidad);
+        this.revalidate();
+        this.repaint();
     }
 
     /**
@@ -29,22 +70,24 @@ public class UsuariosPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        nuevoUsuarioBtn = new javax.swing.JButton();
         mostrarTodos = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         barraBusqeuda = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        sucursalesBox = new javax.swing.JComboBox<>();
+        rolesBox = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        panelNuevoUsuario = new javax.swing.JPanel();
         mostrarTodos1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        sucursalLbl = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 204, 153));
 
-        jButton1.setBackground(new java.awt.Color(51, 102, 255));
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
-        jButton1.setText("Nueva sucursal");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        nuevoUsuarioBtn.setBackground(new java.awt.Color(51, 102, 255));
+        nuevoUsuarioBtn.setForeground(new java.awt.Color(0, 0, 0));
+        nuevoUsuarioBtn.setText("Nuevo usuario");
+        nuevoUsuarioBtn.addActionListener(this::nuevoUsuarioBtnActionPerformed);
 
         mostrarTodos.setBackground(new java.awt.Color(153, 153, 153));
         mostrarTodos.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
@@ -59,9 +102,10 @@ public class UsuariosPanel extends javax.swing.JPanel {
         barraBusqeuda.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
         barraBusqeuda.addActionListener(this::barraBusqeudaActionPerformed);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sucursalesBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        rolesBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin sistema", "Tendero", "Cocinero" }));
+        rolesBox.addActionListener(this::rolesBoxActionPerformed);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -73,19 +117,19 @@ public class UsuariosPanel extends javax.swing.JPanel {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 385, Short.MAX_VALUE)
+            .addGap(0, 380, Short.MAX_VALUE)
         );
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 51));
+        panelNuevoUsuario.setBackground(new java.awt.Color(255, 255, 51));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelNuevoUsuarioLayout = new javax.swing.GroupLayout(panelNuevoUsuario);
+        panelNuevoUsuario.setLayout(panelNuevoUsuarioLayout);
+        panelNuevoUsuarioLayout.setHorizontalGroup(
+            panelNuevoUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelNuevoUsuarioLayout.setVerticalGroup(
+            panelNuevoUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
@@ -94,6 +138,15 @@ public class UsuariosPanel extends javax.swing.JPanel {
         mostrarTodos1.setText("Todos");
         mostrarTodos1.addActionListener(this::mostrarTodos1ActionPerformed);
 
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel1.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("ROL:");
+
+        sucursalLbl.setFont(new java.awt.Font("Fira Sans", 0, 18)); // NOI18N
+        sucursalLbl.setForeground(new java.awt.Color(0, 0, 0));
+        sucursalLbl.setText("Sucursal:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,48 +154,64 @@ public class UsuariosPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelNuevoUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(247, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nuevoUsuarioBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(223, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(barraBusqeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(mostrarTodos, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mostrarTodos1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rolesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(sucursalesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(barraBusqeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(mostrarTodos, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(mostrarTodos1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(sucursalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nuevoUsuarioBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(sucursalLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sucursalesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rolesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(barraBusqeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mostrarTodos, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mostrarTodos1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(panelNuevoUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void nuevoUsuarioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoUsuarioBtnActionPerformed
+        this.panelNuevoUsuario.setLayout(new BorderLayout());
+        this.panelNuevoUsuario.add(new UsuarioForm(this.panelNuevoUsuario), BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+
         /*this.panelResultados.removeAll();
         this.panelResultados.setLayout(new BorderLayout());
         this.panelResultados.add(new NuevaSucursalPanel(this.panelResultados), BorderLayout.NORTH);
@@ -150,7 +219,7 @@ public class UsuariosPanel extends javax.swing.JPanel {
         this.panelResultados.repaint();
         this.revalidate();
         this.repaint();*/
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_nuevoUsuarioBtnActionPerformed
 
     private void mostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarTodosActionPerformed
 
@@ -168,16 +237,22 @@ public class UsuariosPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_mostrarTodos1ActionPerformed
 
+    private void rolesBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rolesBoxActionPerformed
+       this.cambiarVisivilidadSucursales();
+    }//GEN-LAST:event_rolesBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barraBusqeuda;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JButton mostrarTodos;
     private javax.swing.JButton mostrarTodos1;
+    private javax.swing.JButton nuevoUsuarioBtn;
+    private javax.swing.JPanel panelNuevoUsuario;
+    private javax.swing.JComboBox<String> rolesBox;
+    private javax.swing.JLabel sucursalLbl;
+    private javax.swing.JComboBox<String> sucursalesBox;
     // End of variables declaration//GEN-END:variables
 }

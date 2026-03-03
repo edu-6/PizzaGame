@@ -22,7 +22,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <Component id="panelResultados" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelNuevoUsuario" max="32767" attributes="0"/>
           </Group>
@@ -34,27 +34,24 @@
               <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
                       <Component id="jLabel1" min="-2" pref="132" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="rolesBox" min="-2" pref="206" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="rolesBox" alignment="1" min="-2" pref="206" max="-2" attributes="0"/>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="sucursalesBox" min="-2" pref="203" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Component id="mostrarTodos" min="-2" max="-2" attributes="0"/>
+                      <Component id="busquedaFiltrosBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="barraBusqeuda" min="-2" pref="363" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="mostrarTodos1" min="-2" pref="279" max="-2" attributes="0"/>
+                      <Component id="buscarPorString" min="-2" pref="279" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
@@ -86,12 +83,12 @@
                   <Component id="sucursalesBox" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
                   <Component id="rolesBox" alignment="3" min="-2" pref="51" max="-2" attributes="0"/>
                   <Component id="barraBusqeuda" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
-                  <Component id="mostrarTodos" alignment="3" min="-2" pref="52" max="-2" attributes="0"/>
-                  <Component id="mostrarTodos1" alignment="3" min="-2" pref="53" max="-2" attributes="0"/>
+                  <Component id="busquedaFiltrosBtn" alignment="3" min="-2" pref="52" max="-2" attributes="0"/>
+                  <Component id="buscarPorString" alignment="3" min="-2" pref="53" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel1" max="32767" attributes="0"/>
+                  <Component id="panelResultados" max="32767" attributes="0"/>
                   <Component id="panelNuevoUsuario" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -116,7 +113,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nuevoUsuarioBtnActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="mostrarTodos">
+    <Component class="javax.swing.JButton" name="busquedaFiltrosBtn">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="99" green="99" red="99" type="rgb"/>
@@ -130,7 +127,7 @@
         <Property name="text" type="java.lang.String" value="Buscar( Filtros)"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mostrarTodosActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="busquedaFiltrosBtnActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton2">
@@ -198,7 +195,7 @@
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
-    <Container class="javax.swing.JPanel" name="jPanel1">
+    <Container class="javax.swing.JPanel" name="panelResultados">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -238,7 +235,7 @@
         </DimensionLayout>
       </Layout>
     </Container>
-    <Component class="javax.swing.JButton" name="mostrarTodos1">
+    <Component class="javax.swing.JButton" name="buscarPorString">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="99" green="99" red="99" type="rgb"/>
@@ -252,7 +249,7 @@
         <Property name="text" type="java.lang.String" value="Buscar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mostrarTodos1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buscarPorStringActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">

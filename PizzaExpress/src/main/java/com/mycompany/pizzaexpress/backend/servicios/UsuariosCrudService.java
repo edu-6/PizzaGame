@@ -4,6 +4,8 @@
  */
 package com.mycompany.pizzaexpress.backend.servicios;
 
+import com.mycompany.pizzaexpress.backend.crudIntefaces.BusquedaParametrica;
+import com.mycompany.pizzaexpress.backend.crudIntefaces.BusquedaPorString;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.CreacionEntidad;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.EdicionEntidad;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.EliminacionEntidad;
@@ -12,13 +14,16 @@ import com.mycompany.pizzaexpress.backend.exceptions.CamposVaciosException;
 import com.mycompany.pizzaexpress.backend.exceptions.DatosMuyLargosException;
 import com.mycompany.pizzaexpress.backend.exceptions.EntidadDuplicadaException;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
+import com.mycompany.pizzaexpress.backend.modelos.BusquedaUsuarios;
 import com.mycompany.pizzaexpress.backend.modelos.Usuario;
+import java.util.ArrayList;
 
 /**
  *
  * @author edu
  */
-public class UsuariosCrudService implements CreacionEntidad<Usuario>, EdicionEntidad<Usuario>, EliminacionEntidad {
+public class UsuariosCrudService implements CreacionEntidad<Usuario>, EdicionEntidad<Usuario>,
+        EliminacionEntidad, BusquedaPorString<Usuario>,BusquedaParametrica <BusquedaUsuarios,Usuario> {
 
     private final UsuariosDB db = new UsuariosDB();
 
@@ -61,5 +66,20 @@ public class UsuariosCrudService implements CreacionEntidad<Usuario>, EdicionEnt
     public void eliminar(int id) throws ExceptionGenerica {
         db.eliminar(id);
     }
+
+    @Override
+    public ArrayList<Usuario> buscarPorString(String parametro) throws ExceptionGenerica {
+       if(parametro.isBlank()){
+           throw new ExceptionGenerica("Ingrese una cadena para buscar");
+       }
+       return this.db.buscarPorString(parametro);
+    }
+
+    @Override
+    public ArrayList<Usuario> buscarVariosConFiltro(BusquedaUsuarios busqueda) throws ExceptionGenerica {
+        return this.db.buscarVariosConFiltro(busqueda);
+    }
+    
+    
     
 }

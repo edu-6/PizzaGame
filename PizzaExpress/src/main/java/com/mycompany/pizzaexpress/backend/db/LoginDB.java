@@ -19,7 +19,7 @@ import java.sql.SQLException;
 public class LoginDB extends GenericDB {
 
    private static final String LOGIN_USUARIO = "SELECT nickname, nombre, rol, id_sucursal FROM usuario WHERE nickname = ? AND contraseña = ?";
-    private static final String NOMBRE_SUCURSAL = "SELECT nombre FROM sucursal WHERE id = ?";
+    private static final String NOMBRE_SUCURSAL = "SELECT nombre FROM sucursal WHERE id_sucursal = ?";
 
     public Usuario loguear(String nickname, String contraseña) throws ExceptionGenerica {
         

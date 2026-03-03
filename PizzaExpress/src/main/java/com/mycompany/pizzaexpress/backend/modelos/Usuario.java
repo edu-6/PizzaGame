@@ -17,17 +17,15 @@ public class Usuario {
     private String nombreSucursal;
     private int idSucursal;
 
-    public Usuario(String contraseña, String nombre, String rol, String nickname, String nombreSucursal, int idSucursal) {
+    public Usuario(String contraseña, String nombre, String rol, String nickname, int idSucursal) {
         this.contraseña = contraseña;
         this.nombre = nombre;
         this.rol = rol;
         this.nickname = nickname;
-        this.nombreSucursal = nombreSucursal;
         this.idSucursal = idSucursal;
     }
     
     // usado para devolver el id
-    
     public Usuario(int id, String contraseña, String nombre, String rol, String nickname, String nombreSucursal, int idSucursal) {
         this.id = id;
         this.contraseña = contraseña;

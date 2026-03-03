@@ -8,6 +8,7 @@ import com.mycompany.pizzaexpress.backend.db.SucursalesDB;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
 import com.mycompany.pizzaexpress.backend.modelos.Usuario;
+import com.mycompany.pizzaexpress.backend.servicios.UsuariosCrudService;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -19,23 +20,24 @@ import javax.swing.JPanel;
  * @author edu
  */
 public class UsuarioForm extends javax.swing.JPanel {
-
+    private UsuariosPanel panelPadre;
     private JPanel parent;
     private Usuario usuario;
-    private ArrayList<Sucursal> lista;
+    private ArrayList<Sucursal> listaSucursales;
     private SucursalesDB sucursalesDB = new SucursalesDB();
 
     /**
      * Creates new form NuevaSucursalPanel
      */
-    public UsuarioForm(JPanel panel) {
+    public UsuarioForm(JPanel panel, UsuariosPanel panelPadre) {
         this.iniciarPanel(panel);
+        this.panelPadre = panelPadre;
         this.ocularComboBoxSucursales();
         this.cargarSucursales();
     }
-    public UsuarioForm(JPanel parent, Usuario usuario) {
-        this.iniciarPanel(parent);
-        this.parent = parent;
+    public UsuarioForm(JPanel panel,UsuariosPanel panelPadre ,Usuario usuario) {
+        this.iniciarPanel(panel);
+        this.panelPadre = panelPadre;
         this.usuario = usuario;
         this.ocularComboBoxSucursales();
         this.cargarSucursales();
@@ -65,9 +67,9 @@ public class UsuarioForm extends javax.swing.JPanel {
     private void cargarSucursales() {
         try {
             // cargar todas las sucursales
-            this.lista = sucursalesDB.seleccionarTodos();
+            this.listaSucursales = sucursalesDB.seleccionarTodos();
             // cambiando de sucursales a nombres
-            String[] nombres = lista.stream().map(s -> s.getNombre()).toArray(String[]::new);
+            String[] nombres = this.listaSucursales.stream().map(s -> s.getNombre()).toArray(String[]::new);
             // ondiendoselo al combo box 
             DefaultComboBoxModel modelo = new DefaultComboBoxModel(nombres);
             this.SucursalesBox.setModel(modelo);
@@ -84,22 +86,38 @@ public class UsuarioForm extends javax.swing.JPanel {
         // poner el tipo de usuario que era antes
         this.setRolAnterior(usuario);
         // poner la sucursal que era antes
-        this.SucursalesBox.setSelectedIndex(encontrarIndexSucursal(usuario.getIdSucursal(), lista));
+        if(usuario.getIdSucursal() > 0){
+            this.SucursalesBox.setSelectedIndex(encontrarIndexSucursal(usuario.getIdSucursal(), listaSucursales));
+        }
+        
        
     }
     
     private void setRolAnterior(Usuario usuario){
          switch (usuario.getRol()) {
-            case "SUPER_ADMIN":
-                this.SucursalesBox.setSelectedIndex(0);
+            case "ADMIN_SISTEMA":
+                this.rolesBox.setSelectedIndex(0);
                 break;
             case "TENDERO":
-                this.SucursalesBox.setSelectedIndex(1);
+                this.rolesBox.setSelectedIndex(1);
                 break;
             case "COCINERO":
-                this.SucursalesBox.setSelectedIndex(2);
+                this.rolesBox.setSelectedIndex(2);
                 break;
         }
+    }
+    
+    
+    private String setRolSegunIndice(int indice){
+        switch (indice) {
+            case 0:
+               return "ADMIN_SISTEMA";
+            case 1:
+                return "TENDERO";
+            case 2:
+                return "COCINERO";
+        }
+        return null;
     }
 
     private int encontrarIndexSucursal(int idSucursal, ArrayList<Sucursal> lista) {
@@ -254,21 +272,31 @@ public class UsuarioForm extends javax.swing.JPanel {
     }//GEN-LAST:event_contraseñaTxtActionPerformed
 
     private void guardarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarBtnActionPerformed
-        // realmente guardar
-        /*SucursalesCrudService crud = new SucursalesCrudService();
-        Sucursal nueva = new Sucursal(this.ubicacionTexto.getText(), this.nombreTexto.getText());
+
+        UsuariosCrudService crud = new UsuariosCrudService();
+        //Extrear el nuevo usuario
+        Usuario nuevo = new Usuario(
+                this.contraseñaTxt.getText(),
+                this.nombreTexto.getText(),
+                this.setRolSegunIndice(this.rolesBox.getSelectedIndex()),
+                this.nicknameTxt.getText(),
+                // buscar el indicex elegido, y luego buscar el id que pertenece a ese index
+                this.listaSucursales.get(this.SucursalesBox.getSelectedIndex()).getId()
+        );
+       
         try {
-            if(this.sucursal == null){
-                crud.crear(nueva);
+            if(this.usuario == null){
+                crud.crear(nuevo);
             }else{
-                nueva.setId(sucursal.getId());
-                crud.editar(nueva);
+                nuevo.setId(usuario.getId()); // volver a ponerle el id
+                crud.editar(nuevo);
+                this.panelPadre.actualizarUltimaBusqueda();// para atualizar el panel 
             }
             
             this.desparecer();
         } catch (ExceptionGenerica ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
-        }*/
+        }
     }//GEN-LAST:event_guardarBtnActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

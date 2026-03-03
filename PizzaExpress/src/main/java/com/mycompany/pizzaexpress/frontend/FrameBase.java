@@ -48,7 +48,7 @@ public class FrameBase extends javax.swing.JFrame {
 
     public void cambiarPanel(Usuario usuarioLogueado) {
         reiniciarFrame();
-        if (usuarioLogueado.getRol().equals("SUPER_ADMIN")) {
+        if (usuarioLogueado.getRol().equals("ADMIN_SISTEMA")) {
             this.add(new SuperAdminBase(this), BorderLayout.CENTER);
             pintar();
 

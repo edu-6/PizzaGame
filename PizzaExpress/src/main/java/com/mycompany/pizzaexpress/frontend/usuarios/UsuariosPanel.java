@@ -6,21 +6,30 @@ package com.mycompany.pizzaexpress.frontend.usuarios;
 
 import com.mycompany.pizzaexpress.backend.db.SucursalesDB;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
+import com.mycompany.pizzaexpress.backend.modelos.BusquedaUsuarios;
 import com.mycompany.pizzaexpress.backend.modelos.Sucursal;
+import com.mycompany.pizzaexpress.backend.modelos.Usuario;
+import com.mycompany.pizzaexpress.backend.servicios.UsuariosCrudService;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.SuperAdminBase;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
  * @author edu
  */
 public class UsuariosPanel extends javax.swing.JPanel {
-
+    private boolean ultimaTieneFiltros;
+    private JPanel panelContenedor;
     private SuperAdminBase padre;
     private ArrayList<Sucursal> lista;
+    private UsuariosCrudService usuariosCrudService = new UsuariosCrudService();
     private SucursalesDB sucursalesDB = new SucursalesDB();
 
     /**
@@ -33,14 +42,13 @@ public class UsuariosPanel extends javax.swing.JPanel {
         this.cambiarVisivilidadSucursales(); // ocultar al inicio las sucursales
 
     }
-    
-    
-    private void  cargarSucursales(){
+
+    private void cargarSucursales() {
         try {
             // cargar todas las sucursales
             this.lista = sucursalesDB.seleccionarTodos();
             // cambiando de sucursales a nombres
-            String[] nombres = lista.stream().map(s -> s.getNombre()) .toArray(String[]::new);
+            String[] nombres = lista.stream().map(s -> s.getNombre()).toArray(String[]::new);
             // ondiendoselo al combo box 
             DefaultComboBoxModel modelo = new DefaultComboBoxModel(nombres);
             this.sucursalesBox.setModel(modelo);
@@ -48,10 +56,10 @@ public class UsuariosPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
-    
-    private void cambiarVisivilidadSucursales(){
+
+    private void cambiarVisivilidadSucursales() {
         boolean valorDeVisidibilidad = false;
-        if(this.rolesBox.getSelectedIndex() >0){
+        if (this.rolesBox.getSelectedIndex() > 0) {
             valorDeVisidibilidad = true;
         }
         this.sucursalLbl.setVisible(valorDeVisidibilidad);
@@ -59,6 +67,90 @@ public class UsuariosPanel extends javax.swing.JPanel {
         this.sucursalesBox.setEnabled(valorDeVisidibilidad);
         this.revalidate();
         this.repaint();
+    }
+    
+    
+    public void mostrarEdicionForm(Usuario usuario){
+        this.panelNuevoUsuario.setLayout(new BorderLayout());
+        this.panelNuevoUsuario.add(new UsuarioForm(this.panelNuevoUsuario,this, usuario), BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    
+    
+    private void mostrarResultados(ArrayList<Usuario> lista){
+        this.panelResultados.removeAll();
+        this.panelResultados.revalidate();
+        this.panelResultados.repaint();
+        JPanel contenedor = new JPanel();
+            contenedor.setLayout(new BoxLayout(contenedor, BoxLayout.Y_AXIS));
+            for (Usuario usuario : lista) {
+                UsuarioInfo tarjeta = new UsuarioInfo(usuario, this, contenedor);
+                contenedor.add(tarjeta);
+                contenedor.add(Box.createVerticalStrut(10));
+            }
+
+            contenedor.revalidate();
+            contenedor.repaint();
+
+            JScrollPane scrollPane = new JScrollPane(contenedor);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            
+            panelResultados.setLayout(new BorderLayout());
+            panelResultados.add(scrollPane, BorderLayout.CENTER);
+            panelResultados.revalidate();
+            panelResultados.repaint();
+            this.revalidate();
+            this.repaint();
+    }
+    
+    
+    public void actualizarUltimaBusqueda(){
+        if(this.ultimaTieneFiltros){
+            this.buscarConFiltros();
+        }else{
+            this.buscarPorNombreONickname();
+        }
+    }
+    
+    public void buscarPorNombreONickname(){
+        this.ultimaTieneFiltros = false;
+        
+        if(this.barraBusqeuda.getText().isBlank()){
+            return;
+        }
+        try {
+            ArrayList<Usuario> usuarios = this.usuariosCrudService.buscarPorString(this.barraBusqeuda.getText());
+            mostrarResultados(usuarios);
+        } catch (ExceptionGenerica ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+    
+    public void buscarConFiltros(){
+        this.ultimaTieneFiltros = true;
+        int rol = this.rolesBox.getSelectedIndex();
+        String rolElegido = "";
+        switch (rol) {
+            case 0:
+                rolElegido = "ADMIN_SISTEMA";
+                break;
+            case 1:
+                rolElegido = "TENDERO";
+                break;
+            case 2:
+                rolElegido = "COCINERO";
+                break;
+        }
+        BusquedaUsuarios busqueda = new BusquedaUsuarios(rolElegido, (String) this.sucursalesBox.getSelectedItem());
+        try {
+            ArrayList<Usuario> usuarios = this.usuariosCrudService.buscarVariosConFiltro(busqueda);
+            this.mostrarResultados(usuarios);
+        } catch (ExceptionGenerica ex) {
+           JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+        
     }
 
     /**
@@ -71,14 +163,14 @@ public class UsuariosPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         nuevoUsuarioBtn = new javax.swing.JButton();
-        mostrarTodos = new javax.swing.JButton();
+        busquedaFiltrosBtn = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         barraBusqeuda = new javax.swing.JTextField();
         sucursalesBox = new javax.swing.JComboBox<>();
         rolesBox = new javax.swing.JComboBox<>();
-        jPanel1 = new javax.swing.JPanel();
+        panelResultados = new javax.swing.JPanel();
         panelNuevoUsuario = new javax.swing.JPanel();
-        mostrarTodos1 = new javax.swing.JButton();
+        buscarPorString = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         sucursalLbl = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -91,11 +183,11 @@ public class UsuariosPanel extends javax.swing.JPanel {
         nuevoUsuarioBtn.setText("Nuevo usuario");
         nuevoUsuarioBtn.addActionListener(this::nuevoUsuarioBtnActionPerformed);
 
-        mostrarTodos.setBackground(new java.awt.Color(153, 153, 153));
-        mostrarTodos.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
-        mostrarTodos.setForeground(new java.awt.Color(0, 0, 0));
-        mostrarTodos.setText("Buscar( Filtros)");
-        mostrarTodos.addActionListener(this::mostrarTodosActionPerformed);
+        busquedaFiltrosBtn.setBackground(new java.awt.Color(153, 153, 153));
+        busquedaFiltrosBtn.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
+        busquedaFiltrosBtn.setForeground(new java.awt.Color(0, 0, 0));
+        busquedaFiltrosBtn.setText("Buscar( Filtros)");
+        busquedaFiltrosBtn.addActionListener(this::busquedaFiltrosBtnActionPerformed);
 
         jButton2.setBackground(new java.awt.Color(255, 51, 51));
         jButton2.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
@@ -113,16 +205,16 @@ public class UsuariosPanel extends javax.swing.JPanel {
         rolesBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin sistema", "Tendero", "Cocinero" }));
         rolesBox.addActionListener(this::rolesBoxActionPerformed);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        panelResultados.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
+        panelResultados.setLayout(panelResultadosLayout);
+        panelResultadosLayout.setHorizontalGroup(
+            panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 510, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelResultadosLayout.setVerticalGroup(
+            panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 372, Short.MAX_VALUE)
         );
 
@@ -139,11 +231,11 @@ public class UsuariosPanel extends javax.swing.JPanel {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        mostrarTodos1.setBackground(new java.awt.Color(153, 153, 153));
-        mostrarTodos1.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
-        mostrarTodos1.setForeground(new java.awt.Color(0, 0, 0));
-        mostrarTodos1.setText("Buscar");
-        mostrarTodos1.addActionListener(this::mostrarTodos1ActionPerformed);
+        buscarPorString.setBackground(new java.awt.Color(153, 153, 153));
+        buscarPorString.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
+        buscarPorString.setForeground(new java.awt.Color(0, 0, 0));
+        buscarPorString.setText("Buscar");
+        buscarPorString.addActionListener(this::buscarPorStringActionPerformed);
 
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
@@ -163,7 +255,7 @@ public class UsuariosPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelNuevoUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -173,24 +265,22 @@ public class UsuariosPanel extends javax.swing.JPanel {
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(rolesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(rolesBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sucursalesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
-                        .addComponent(mostrarTodos)
+                        .addComponent(busquedaFiltrosBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(barraBusqeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(mostrarTodos1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(buscarPorString, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(sucursalLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -215,33 +305,25 @@ public class UsuariosPanel extends javax.swing.JPanel {
                     .addComponent(sucursalesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rolesBox, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(barraBusqeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mostrarTodos, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mostrarTodos1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(busquedaFiltrosBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscarPorString, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelNuevoUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void nuevoUsuarioBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoUsuarioBtnActionPerformed
         this.panelNuevoUsuario.setLayout(new BorderLayout());
-        this.panelNuevoUsuario.add(new UsuarioForm(this.panelNuevoUsuario), BorderLayout.CENTER);
+        this.panelNuevoUsuario.add(new UsuarioForm(this.panelNuevoUsuario, this), BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
-
-        /*this.panelResultados.removeAll();
-        this.panelResultados.setLayout(new BorderLayout());
-        this.panelResultados.add(new NuevaSucursalPanel(this.panelResultados), BorderLayout.NORTH);
-        this.panelResultados.revalidate();
-        this.panelResultados.repaint();
-        this.revalidate();
-        this.repaint();*/
     }//GEN-LAST:event_nuevoUsuarioBtnActionPerformed
 
-    private void mostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarTodosActionPerformed
-
-    }//GEN-LAST:event_mostrarTodosActionPerformed
+    private void busquedaFiltrosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaFiltrosBtnActionPerformed
+         this.buscarConFiltros();
+    }//GEN-LAST:event_busquedaFiltrosBtnActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.padre.regresar();
@@ -251,25 +333,27 @@ public class UsuariosPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_barraBusqeudaActionPerformed
 
-    private void mostrarTodos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarTodos1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mostrarTodos1ActionPerformed
+    private void buscarPorStringActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarPorStringActionPerformed
+        
+        this.buscarPorNombreONickname();
+
+    }//GEN-LAST:event_buscarPorStringActionPerformed
 
     private void rolesBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rolesBoxActionPerformed
-       this.cambiarVisivilidadSucursales();
+        this.cambiarVisivilidadSucursales();
     }//GEN-LAST:event_rolesBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barraBusqeuda;
+    private javax.swing.JButton buscarPorString;
+    private javax.swing.JButton busquedaFiltrosBtn;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JButton mostrarTodos;
-    private javax.swing.JButton mostrarTodos1;
     private javax.swing.JButton nuevoUsuarioBtn;
     private javax.swing.JPanel panelNuevoUsuario;
+    private javax.swing.JPanel panelResultados;
     private javax.swing.JComboBox<String> rolesBox;
     private javax.swing.JLabel sucursalLbl;
     private javax.swing.JComboBox<String> sucursalesBox;

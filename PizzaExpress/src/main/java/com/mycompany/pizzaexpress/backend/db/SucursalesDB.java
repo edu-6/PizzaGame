@@ -26,9 +26,9 @@ import java.util.ArrayList;
 public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, CreacionEntidad<Sucursal>, EdicionEntidad<Sucursal>, EliminacionEntidad, LecturaEntidad<Sucursal> {
 
     private static final String CREAR = "INSERT INTO sucursal (nombre, ubicacion) VALUES (?, ?)";
-    private static final String ACTUALIZAR = "UPDATE sucursal SET nombre = ?, ubicacion = ? WHERE id = ?";
-    private static final String ELIMINAR = "DELETE FROM sucursal WHERE id = ?";
-    private static final String BUSCAR_POR_ID = "SELECT * FROM sucursal WHERE id = ?";
+    private static final String ACTUALIZAR = "UPDATE sucursal SET nombre = ?, ubicacion = ? WHERE id_sucursal = ?";
+    private static final String ELIMINAR = "DELETE FROM sucursal WHERE id_sucursal = ?";
+    private static final String BUSCAR_POR_ID = "SELECT * FROM sucursal WHERE id_sucursal = ?";
     private static final String BUSCAR_POR_NOMBRE = "SELECT * FROM sucursal WHERE nombre = ?";
     private static final String SELECCIONAR_TODOS = "SELECT * FROM sucursal ";
     
@@ -88,7 +88,7 @@ public class SucursalesDB extends GenericDB implements BuscarTodos<Sucursal>, Cr
         return new Sucursal(
                 result.getString("ubicacion"),
                 result.getString("nombre"),
-                result.getInt("id")
+                result.getInt("id_sucursal")
         );
     }
     

@@ -25,20 +25,19 @@ import java.util.ArrayList;
     private static final String EDITAR = "UPDATE  producto SET nombre = ?, descripcion = ?, activo = ? WHERE  id_producto = ?";
     private static final String BUSCAR_TODOS_DE_SUCURSAL = "SELECT * FROM   producto WHERE id_sucursal = ?";
     private static final String BUSCAR_PRODUCTO_DENTRO_DE_SUCURSAL = " SELECT"
-            + " * FROM producto WHERE producto_nombre = ? AND id_sucursal = ?";
+            + " * FROM producto WHERE nombre = ? AND id_sucursal = ?";
 
     @Override
     public void crear(Producto entidad) throws ExceptionGenerica {
         try (Connection conn = ConexionDB.getConnection(); PreparedStatement stm = conn.prepareStatement(CREAR)) {
             stm.setString(1, entidad.getNombre());
             stm.setString(2, entidad.getDescripcion());
-            stm.setInt(3, entidad.getId());
+            stm.setInt(3, entidad.getId_sucursal());
             stm.setBoolean(4, entidad.isActivo());
-
             stm.executeUpdate();
 
         } catch (SQLException e) {
-            throw new ExceptionGenerica(" Error al crear el producto");
+            throw new ExceptionGenerica(" Error al crear el producto"+ e.getMessage());
 
         }
     }
@@ -53,7 +52,7 @@ import java.util.ArrayList;
             stm.executeUpdate();
 
         } catch (SQLException e) {
-            throw new ExceptionGenerica(" Error al editar al producto");
+            throw new ExceptionGenerica(" Error al editar al producto"+ e.getMessage());
         }
 
     }
@@ -72,7 +71,7 @@ import java.util.ArrayList;
                 lista.add(extraer(rs));
             }
         } catch (SQLException e) {
-            throw new ExceptionGenerica("Error al buscar productos");
+            throw new ExceptionGenerica("Error al buscar productos"+ e.getMessage());
         }
         return lista;
     }
@@ -84,10 +83,11 @@ import java.util.ArrayList;
                     rs.getString("nombre"),
                     rs.getBoolean("activo"),
                     rs.getString("descripcion"),
-                    rs.getInt("id")
+                    rs.getInt("id_sucursal"),
+                    rs.getInt("id_producto")
             );
         } catch (SQLException e) {
-            throw new ExceptionGenerica("Error al obtener el producto");
+            throw new ExceptionGenerica("Error al obtener el producto"+ e.getMessage());
         }
     }
     
@@ -102,7 +102,7 @@ import java.util.ArrayList;
                 return extraer(rs);
             }
         } catch (SQLException e) {
-            throw new ExceptionGenerica(" Error al buscar el producto");
+            throw new ExceptionGenerica(" Error al buscar el producto" +e.getMessage());
         }
         return null;
     }

@@ -2,19 +2,55 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.mycompany.pizzaexpress.frontend.panels_por_rol;
+package com.mycompany.pizzaexpress.frontend.panels_por_rol.tendero;
+import com.mycompany.pizzaexpress.frontend.FrameBase;
+import com.mycompany.pizzaexpress.frontend.productos.ProductosPanel;
+import java.awt.BorderLayout;
 
 /**
  *
  * @author edu
  */
-public class UserPanel extends javax.swing.JPanel {
-
+public class TenderoBase extends javax.swing.JPanel {
+    private FrameBase padre;
     /**
-     * Creates new form UserPanel
+     * Creates new form PanelBase_SuperAdmin
      */
-    public UserPanel() {
+    public TenderoBase(FrameBase padre) {
         initComponents();
+       iniciarPanel();
+       this.padre = padre;
+    }
+    
+    
+    public void  cerrarSesion(){
+        this.padre.mostrarLogin();
+    }
+    
+    private void iniciarPanel(){
+        this.setLayout(new BorderLayout());
+        this.add(new TenderoPanel(this), BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    
+    
+    public void cambiarAProductos(){
+        limpiarFrame();
+        this.add(new ProductosPanel (this), BorderLayout.CENTER);
+    }
+    
+    
+    public void limpiarFrame(){
+        this.removeAll();
+        this.revalidate();
+        this.repaint();
+    }
+    
+    
+    public void regresar(){
+        limpiarFrame();
+        iniciarPanel();
     }
 
     /**
@@ -26,33 +62,19 @@ public class UserPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-
-        setBackground(new java.awt.Color(51, 51, 255));
-
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/pizzaexpress/imagenes/ajustes.png"))); // NOI18N
-        jButton1.setText("jButton1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(120, Short.MAX_VALUE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(53, 53, 53)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(77, Short.MAX_VALUE))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 }

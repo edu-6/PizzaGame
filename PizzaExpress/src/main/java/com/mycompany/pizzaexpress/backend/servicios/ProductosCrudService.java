@@ -41,7 +41,7 @@ public class ProductosCrudService implements CreacionEntidad<Producto>,
         Producto producto = this.db.buscarProductoEnSucursal(entidad.getNombre(), entidad.getId_sucursal());
 
         if (producto != null) {
-            throw new EntidadDuplicadaException("ya existe el product" + entidad.getNombre() + " en esta sucursal");
+            throw new EntidadDuplicadaException("ya existe el producto" + entidad.getNombre() + " en esta sucursal");
         }
 
         db.crear(entidad);
@@ -72,8 +72,13 @@ public class ProductosCrudService implements CreacionEntidad<Producto>,
         db.editar(entidad);
     } 
     
-    public Producto buscarProductoEnSucursal (String nombre, int idSucursal) throws ExceptionGenerica{
-        return db.buscarProductoEnSucursal(nombre, idSucursal);
+    public Producto buscarProductoEnSucursal(String nombre, int idSucursal) throws ExceptionGenerica {
+        Producto producto
+                = db.buscarProductoEnSucursal(nombre, idSucursal);
+        if (producto == null) {
+            throw new ExceptionGenerica("No se encontró:  " + nombre);
+        }
+        return producto;
     }
 
 }

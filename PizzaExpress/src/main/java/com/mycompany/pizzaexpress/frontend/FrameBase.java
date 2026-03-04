@@ -4,8 +4,10 @@
  */
 package com.mycompany.pizzaexpress.frontend;
 
+import com.mycompany.pizzaexpress.backend.modelos.Sesion;
 import com.mycompany.pizzaexpress.backend.modelos.Usuario;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.SuperAdminBase;
+import com.mycompany.pizzaexpress.frontend.panels_por_rol.tendero.TenderoBase;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -14,8 +16,7 @@ import java.awt.Dimension;
  * @author edu
  */
 public class FrameBase extends javax.swing.JFrame {
-
-   
+;
 
     /**
      * Creates new form FrameBase
@@ -47,12 +48,20 @@ public class FrameBase extends javax.swing.JFrame {
     }
 
     public void cambiarPanel(Usuario usuarioLogueado) {
+        Sesion.guardarSesion(usuarioLogueado);
         reiniciarFrame();
-        if (usuarioLogueado.getRol().equals("ADMIN_SISTEMA")) {
-            this.add(new SuperAdminBase(this), BorderLayout.CENTER);
-            pintar();
-
+        switch (usuarioLogueado.getRol()) {
+            case "ADMIN_SISTEMA":
+                this.add(new SuperAdminBase(this), BorderLayout.CENTER);
+                break;
+            case "TENDERO":
+                this.add(new TenderoBase(this), BorderLayout.CENTER);
+                
+                break;
+            case "COCINCERO":
+                break;
         }
+        pintar();
     }
     
     

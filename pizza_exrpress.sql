@@ -41,7 +41,7 @@ CREATE TABLE usuario (
 CREATE TABLE producto (
     id_producto INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    descripcion TEXT,
+    descripcion VARCHAR(200) NOT NULL,
     id_sucursal INT NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT fk_producto_sucursal FOREIGN KEY (id_sucursal) 

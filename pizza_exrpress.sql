@@ -101,5 +101,4 @@ CREATE TABLE tabla_estados (
     no_entregado BOOLEAN DEFAULT FALSE,
     cancelado BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_estados_pedido FOREIGN KEY (id_pedido) 
-        REFERENCES pedido(id_pedido) ON DELETE CASCADE
 );

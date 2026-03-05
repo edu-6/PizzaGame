@@ -37,6 +37,11 @@ public class SuperAdminBase extends javax.swing.JPanel {
     }
     
     
+    public void mostrarAjustes(){
+        limpiarFrame();
+        this.add(new ConfiguracionesPanel(this), BorderLayout.CENTER);
+    }
+    
     public void cambiarAUsuarios(){
         limpiarFrame();
         this.add(new UsuariosPanel(this), BorderLayout.CENTER);

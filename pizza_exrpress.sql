@@ -101,4 +101,37 @@ CREATE TABLE tabla_estados (
     no_entregado BOOLEAN DEFAULT FALSE,
     cancelado BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_estados_pedido FOREIGN KEY (id_pedido) 
+    REFERENCES pedido(id_pedido) ON DELETE CASCADE
 );
+
+
+INSERT INTO configuracion_global (
+    tiempo_partida, 
+    tiempo_nivel_1, 
+    tiempo_nivel_2, 
+    tiempo_nivel_3, 
+    puntos_nivel_2, 
+    puntos_nivel_3, 
+    tiempo_entre_pedidos
+) VALUES (180, 60, 45, 30, 1000, 2500, 15);
+
+INSERT INTO configuracion_punteos (
+    bono_pedido_correcto, 
+    bono_tiempo_optimo, 
+    bono_eficiencia, 
+    pedido_cancelado, 
+    pedido_incompleto
+) VALUES (100, 50, 25, 30, 60);
+
+
+INSERT INTO sucursal (nombre, ubicacion) 
+VALUES ('PizzaExpress Central', 'Xela');
+
+INSERT INTO usuario (nickname, nombre, contraseña, rol, id_sucursal) 
+VALUES ('admin', 'Domingo', 'admin', 'ADMIN_SISTEMA', NULL);
+
+INSERT INTO usuario (nickname, nombre, contraseña, rol, id_sucursal) 
+VALUES ('tendero', 'Juan', 'tendero', 'TENDERO', 1);
+
+INSERT INTO usuario (nickname, nombre, contraseña, rol, id_sucursal) 
+VALUES ('cocinero', 'Chef Principal', 'cocinero', 'COCINERO', 1);

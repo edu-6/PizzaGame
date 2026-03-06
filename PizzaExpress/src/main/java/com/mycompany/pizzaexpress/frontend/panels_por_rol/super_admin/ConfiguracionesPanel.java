@@ -46,6 +46,7 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
         this.puntosNivel2.setValue(part.getPuntosNivel2());
         this.puntosNivel3.setValue(part.getPuntosNivel3());
         this.tiempoEntrePedidos.setValue(part.getTiempoEntrePedidos());
+        this.maximosPedidosActivos.setValue(part.getLimitePedidosActivos());
 
         //Configuraciones de punteos
         this.pedidoCorrecto.setValue(punt.getBonoPedidoCorrecto());

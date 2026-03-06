@@ -74,6 +74,9 @@ public class ConfiguracionesCrudService {
       
         if (c.getTiempoEntrePedidos() >= c.getTiempoPartida()){
              throw new ExceptionGenerica("El tiempo entre pedidos no puede ser igual ni mayor al tiempo de la partida");
+        }
+        if (c.getLimitePedidosActivos() <= 0 ){
+             throw new ExceptionGenerica("El limite de pedidos activos solo puede ser mayor a 0");
         } 
            
     }

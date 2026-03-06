@@ -41,7 +41,8 @@ public class ConfiguracionesDB {
     }
 
     public ConfiguracionDePartida obtenerReglasPartida() throws ExceptionGenerica {
-        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stm = conn.prepareStatement(BUSCAR_GLOBAL); ResultSet rs = stm.executeQuery()) {
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement stm = conn.prepareStatement(BUSCAR_GLOBAL);) {
+            ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 return new ConfiguracionDePartida(
                     rs.getInt("tiempo_partida"),
@@ -57,7 +58,7 @@ public class ConfiguracionesDB {
         } catch (SQLException e) {
             throw new ExceptionGenerica("Error al obtener configuración global: " + e.getMessage());
         }
-        return null;
+        throw new ExceptionGenerica("No se encontró la configuracion de partida ");
     }
 
     public void editarReglasPunteos(ConfiguracionPunteos punteo) throws ExceptionGenerica {
@@ -87,7 +88,7 @@ public class ConfiguracionesDB {
         } catch (SQLException e) {
             throw new ExceptionGenerica("Error al obtener configuración de punteos: " + e.getMessage());
         }
-        return null;
+        throw new ExceptionGenerica("No se encontró la configuración de punteos: ");
     }
     
 }

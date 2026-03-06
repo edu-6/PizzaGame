@@ -113,7 +113,7 @@ INSERT INTO configuracion_global (
     tiempo_nivel_3, 
     puntos_nivel_2, 
     puntos_nivel_3, 
-    tiempo_entre_pedidos
+    tiempo_entre_pedidos,
     limite_pedidos_activos
 ) VALUES (180, 60, 45, 30, 1000, 2500, 15,3);
 

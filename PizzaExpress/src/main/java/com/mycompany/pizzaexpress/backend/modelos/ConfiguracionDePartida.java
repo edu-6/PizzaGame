@@ -17,9 +17,11 @@ public class ConfiguracionDePartida {
     private int puntosNivel2;
     private int puntosNivel3;
     private int tiempoEntrePedidos;
+    private int limitePedidosActivos;
     
     
-    public ConfiguracionDePartida( int tiempoPartida, int tiempoNivel1, int tiempoNivel2, int tiempoNivel3, int puntosNivel2, int puntosNivel3, int tiempoEntrePedidos) {
+    public ConfiguracionDePartida( int tiempoPartida, int tiempoNivel1, int tiempoNivel2, int tiempoNivel3, int puntosNivel2,
+            int puntosNivel3, int tiempoEntrePedidos, int limitePedidosActivos) {
         this.tiempoPartida = tiempoPartida;
         this.tiempoNivel1 = tiempoNivel1;
         this.tiempoNivel2 = tiempoNivel2;
@@ -27,6 +29,7 @@ public class ConfiguracionDePartida {
         this.puntosNivel2 = puntosNivel2;
         this.puntosNivel3 = puntosNivel3;
         this.tiempoEntrePedidos = tiempoEntrePedidos;
+        this.limitePedidosActivos = limitePedidosActivos;
     }
 
     public int getTiempoPartida() {
@@ -56,6 +59,11 @@ public class ConfiguracionDePartida {
     public int getTiempoEntrePedidos() {
         return tiempoEntrePedidos;
     }
+
+    public int getLimitePedidosActivos() {
+        return limitePedidosActivos;
+    }
+    
 
   
 }

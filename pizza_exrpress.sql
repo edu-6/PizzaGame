@@ -9,7 +9,8 @@ CREATE TABLE configuracion_global (
     tiempo_nivel_3 INT NOT NULL,
     puntos_nivel_2 INT NOT NULL,
     puntos_nivel_3 INT NOT NULL,
-    tiempo_entre_pedidos INT NOT NULL
+    tiempo_entre_pedidos INT NOT NULL,
+    limite_pedidos_activos INT NOT NULL
 );
 
 CREATE TABLE configuracion_punteos (
@@ -113,7 +114,8 @@ INSERT INTO configuracion_global (
     puntos_nivel_2, 
     puntos_nivel_3, 
     tiempo_entre_pedidos
-) VALUES (180, 60, 45, 30, 1000, 2500, 15);
+    limite_pedidos_activos
+) VALUES (180, 60, 45, 30, 1000, 2500, 15,3);
 
 INSERT INTO configuracion_punteos (
     bono_pedido_correcto, 

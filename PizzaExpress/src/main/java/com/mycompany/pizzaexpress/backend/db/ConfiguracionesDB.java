@@ -17,7 +17,8 @@ import java.sql.SQLException;
  * @author edu
  */
 public class ConfiguracionesDB {
-    private static final String EDITAR_GLOBAL = "UPDATE configuracion_global SET tiempo_partida = ?, tiempo_nivel_1 = ?, tiempo_nivel_2 = ?, tiempo_nivel_3 = ?, puntos_nivel_2 = ?, puntos_nivel_3 = ?, tiempo_entre_pedidos = ? WHERE id_configuracion = 1";
+    private static final String EDITAR_GLOBAL = "UPDATE configuracion_global SET tiempo_partida = ?, tiempo_nivel_1 = ?, tiempo_nivel_2 = ?, tiempo_nivel_3 = ?, puntos_nivel_2 = ?,"
+            + " puntos_nivel_3 = ?, tiempo_entre_pedidos = ?, limite_pedidos_activos = ? WHERE id_configuracion = 1";
     private static final String BUSCAR_GLOBAL = "SELECT * FROM configuracion_global WHERE id_configuracion = 1";
     private static final String EDITAR_PUNTEOS = "UPDATE configuracion_punteos SET bono_pedido_correcto = ?, bono_tiempo_optimo = ?, bono_eficiencia = ?, pedido_cancelado = ?, pedido_incompleto = ? WHERE id_punteo = 1";
     private static final String BUSCAR_PUNTEOS = "SELECT * FROM configuracion_punteos WHERE id_punteo = 1";
@@ -32,6 +33,7 @@ public class ConfiguracionesDB {
             stm.setInt(5, config.getPuntosNivel2());
             stm.setInt(6, config.getPuntosNivel3());
             stm.setInt(7, config.getTiempoEntrePedidos());
+            stm.setInt(8, config.getLimitePedidosActivos());
             stm.executeUpdate();
         } catch (SQLException e) {
             throw new ExceptionGenerica("Error al actualizar configuración global: " + e.getMessage());
@@ -48,7 +50,8 @@ public class ConfiguracionesDB {
                     rs.getInt("tiempo_nivel_3"),
                     rs.getInt("puntos_nivel_2"),
                     rs.getInt("puntos_nivel_3"),
-                    rs.getInt("tiempo_entre_pedidos")
+                    rs.getInt("tiempo_entre_pedidos"),
+                    rs.getInt("limite_pedidos_activos")
                 );
             }
         } catch (SQLException e) {

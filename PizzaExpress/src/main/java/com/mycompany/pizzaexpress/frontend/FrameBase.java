@@ -6,6 +6,7 @@ package com.mycompany.pizzaexpress.frontend;
 
 import com.mycompany.pizzaexpress.backend.modelos.Sesion;
 import com.mycompany.pizzaexpress.backend.modelos.Usuario;
+import com.mycompany.pizzaexpress.frontend.panels_por_rol.cocinero.CocineroPanelBase;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin.SuperAdminBase;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.tendero.TenderoBase;
 import java.awt.BorderLayout;
@@ -59,6 +60,7 @@ public class FrameBase extends javax.swing.JFrame {
                 
                 break;
             case "COCINCERO":
+                this.add(new CocineroPanelBase(this), BorderLayout.CENTER);
                 break;
         }
         pintar();

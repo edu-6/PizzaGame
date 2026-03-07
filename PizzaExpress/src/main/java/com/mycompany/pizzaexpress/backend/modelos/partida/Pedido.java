@@ -4,61 +4,119 @@
  */
 package com.mycompany.pizzaexpress.backend.modelos.partida;
 
+import com.mycompany.pizzaexpress.backend.modelos.Producto;
 import java.util.ArrayList;
 
 /**
  *
  * @author edu
  */
-public class Pedido implements Runnable{
-    private Thread relojPartida;
-    
-    private boolean activo;
-    private Partida partida;
-    private int tiempoLimite;
-    private ArrayList<ProductoPedido> productos;
+public class Pedido implements Runnable {
 
-    public Pedido(int tiempoLimite, ArrayList<ProductoPedido> productos) {
+    private Thread relojPartida;
+    private Partida partida;
+    private ArrayList<Producto> productos;
+
+    private boolean activo;
+    private int tiempoLimite;
+    private int tiempoRestante;
+    
+
+    // estados del pedido
+    private int ultimoEstado = 1;
+    private boolean recibido = true;  //1
+    private boolean preparando; //2
+    private boolean enHorno;   //3
+    private boolean entregado; //4
+    private boolean cancelado; //5
+    private boolean noEntregado; //6
+
+    public Pedido(int tiempoLimite, ArrayList<Producto> productos,
+            Thread relojPartida, Partida partida) {
         this.tiempoLimite = tiempoLimite;
+        this.tiempoRestante = tiempoLimite;
         this.productos = productos;
+        this.relojPartida = relojPartida;
+        this.partida = partida;
     }
 
     @Override
     public void run() {
-        while(pedidoEstaVivo()){
+        while (pedidoEstaVivo()) {
             try {
                 Thread.sleep(1000);
-                tiempoLimite-= 1000;
+                tiempoRestante -= 1000;
                 // actualizar el panel con el tiempo limite
             } catch (InterruptedException ex) {
             }
         }
         
-        // avisar a la partida que ya terminó
+        //si no fue cancelado o entregado
+        if ((!cancelado && !entregado)) {
+            this.noEntregado = true;
+        }
+        
+        //avisar a la partida que ya terminó
         partida.ProcesarPedidoFinalizado(this);
     }
 
-    public void setReloj(Thread reloj) {
-        this.relojPartida = reloj;
+    
+
+    private boolean pedidoEstaVivo() {
+        return relojPartida.isAlive()
+                && tiempoRestante > 0
+                && activo;
     }
 
-    public void setPartida(Partida partida) {
-        this.partida = partida;
+    /**
+     * Cambia los estados actuales
+     */
+    public void avanzar() {
+        ultimoEstado++;
+        switch (ultimoEstado) {
+            case 2:
+                preparando = true;
+                break;
+            case 3:
+                enHorno = true;
+                break;
+            case 4:
+                entregado = true;
+                activo = false; // termina el pedido
+                break;
+        }
     }
 
+    public boolean sePuedeCancelar() {
+        return ultimoEstado < 3;
+    }
+
+    public void cancelar() {
+        this.activo = false;
+        this.cancelado = true;
+        this.ultimoEstado = 5;
+    }
+
+    public boolean aplicaBonoAntesDeTiempo() {
+        return (entregado && tiempoRestante > 0);
+    }
+
+    public boolean aplicaBonoEficiencia() {
+        return (entregado && tiempoRestante >= tiempoLimite / 2);
+    }
+
+    public boolean isEntregado() {
+        return entregado;
+    }
+
+    public boolean isCancelado() {
+        return cancelado;
+    }
+
+    public boolean isNoEntregado() {
+        return noEntregado;
+    }
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
-    
-    private boolean pedidoEstaVivo(){
-        return relojPartida.isAlive()
-        && tiempoLimite>0
-        && activo;
-    }
-    
-    
-    
-    
-    
-
 }

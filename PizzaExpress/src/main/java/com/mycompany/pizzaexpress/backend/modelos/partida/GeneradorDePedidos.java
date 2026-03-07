@@ -4,46 +4,74 @@
  */
 package com.mycompany.pizzaexpress.backend.modelos.partida;
 
+import com.mycompany.pizzaexpress.backend.db.PedidosDB;
+import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionDePartida;
+import com.mycompany.pizzaexpress.backend.modelos.Sesion;
 
 /**
  *
  * @author edu
  */
 public class GeneradorDePedidos implements Runnable {
-    
-     private ConfiguracionDePartida reglasPartida;
+
+    private PedidosDB pedidosDB = new PedidosDB();
+
+    private ConfiguracionDePartida reglasPartida;
     private int tiempoEntrePedidos;
-    private Thread hiloReloj;
+    private Thread relojPartida;
     private Partida partida;
 
-    public GeneradorDePedidos(Thread hiloReloj, Partida partida,ConfiguracionDePartida reglasPartida  ) {
-        this.hiloReloj = hiloReloj;
+    public GeneradorDePedidos(Thread hiloReloj, Partida partida, ConfiguracionDePartida reglasPartida) {
+        this.relojPartida = hiloReloj;
         this.partida = partida;
         this.reglasPartida = reglasPartida;
         this.tiempoEntrePedidos = reglasPartida.getTiempoEntrePedidos();
     }
-   
+
     @Override
     public void run() {
-        while(hiloReloj.isAlive()){
-            intentarGenerarPedido();
+        while (relojPartida.isAlive()) {
+            try {
+                intentarGenerarPedido();
+            } catch (ExceptionGenerica ex) {
+               // pendiente de manejar
+               ex.printStackTrace();
+            }
             try {
                 Thread.sleep(tiempoEntrePedidos);
             } catch (InterruptedException ex) {
             }
         }
     }
-    
-    
-    private void intentarGenerarPedido(){
-        if(partida.getCantidadPedidosActivos() < reglasPartida.getLimitePedidosActivos()){
-            Pedido pedido = new Pedido(0, null); // temporal
+
+    /**
+     * Genera un pedido si los pedidos activos no superan el limite
+     * @throws ExceptionGenerica 
+     */
+    private void intentarGenerarPedido() throws ExceptionGenerica {
+        if (partida.getCantidadPedidosActivos() < reglasPartida.getLimitePedidosActivos()) {
+            Pedido pedido = new Pedido(obtenerTiempoPedido(),
+                    pedidosDB.obtenerProductosAleatorios(Sesion.getUsuario().getIdSucursal()),
+                    relojPartida, partida);
             this.partida.agregarNuevoPedido(pedido);
         }
     }
-    
-    
-    
-    
+
+    /**
+     * Sirve para obtener el tiempo limite para un pedido segun 
+     * el nivel del jugador en la partida
+     * @return 
+     */
+    private int obtenerTiempoPedido() {
+        switch (partida.getNivelActual()) {
+            case 1:
+                return reglasPartida.getTiempoNivel1();
+            case 2:
+                return reglasPartida.getTiempoNivel1();
+            case 3:
+                return reglasPartida.getTiempoNivel1();
+        }
+        return 0;
+    }
 }

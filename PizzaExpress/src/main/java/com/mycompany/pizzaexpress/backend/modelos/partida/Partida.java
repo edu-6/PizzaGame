@@ -13,17 +13,26 @@ import java.util.ArrayList;
  * @author edu
  */
 public class Partida implements Runnable {
-    
+
     private Thread hiloReloj;
     // private Panel para mostrar pues
-    
+
     private ConfiguracionDePartida reglasPartida;
     private ConfiguracionPunteos reglasPunteo;
     private GeneradorDePedidos generadorPedidos;
+    private ArrayList<Pedido> listaPedidos = new ArrayList();
 
     private int pedidosActivos;
     private int nivelActual = 1;
-    private ArrayList<Pedido> listaPedidos = new ArrayList();
+
+    // atributos para la db
+    private int puntosPositivos;
+    private int pedidosExitosos;
+    private int pedidosIncompletos;
+    private int pedidosCancelados;
+    private int bonosPorEficiencia;
+    private int penalizaciones;
+    private int puntosTotales;
 
     public Partida(ConfiguracionDePartida reglasPartida, ConfiguracionPunteos reglasPunteo) {
         this.reglasPartida = reglasPartida;
@@ -34,37 +43,90 @@ public class Partida implements Runnable {
     public void run() {
         Reloj reloj = new Reloj(reglasPartida.getTiempoPartida());
         hiloReloj = new Thread(reloj);
-        generadorPedidos = new GeneradorDePedidos(hiloReloj,this, reglasPartida);
+        generadorPedidos = new GeneradorDePedidos(hiloReloj, this, reglasPartida);
         hiloReloj.start();
         Thread hiloGenerador = new Thread(generadorPedidos);
         hiloGenerador.start();
     }
 
     public void agregarNuevoPedido(Pedido pedido) {
-        pedido.setReloj(hiloReloj);
-        pedido.setPartida(this);
         this.listaPedidos.add(pedido);
     }
-    
-    
-    
-    public int getCantidadPedidosActivos(){
+
+    public int getCantidadPedidosActivos() {
         return this.pedidosActivos;
     }
 
     public int getNivelActual() {
         return nivelActual;
     }
-    
-    
-    
-    public void ProcesarPedidoFinalizado(Pedido pedido){
-        // agregar puntos quitar puntos etccccccc
+
+    /**
+     * Actualiza el nivel segun los puntos actuales
+     */
+    public void actualizarNivel() {
+        if (puntosTotales >= reglasPartida.getPuntosNivel2() && puntosTotales < reglasPartida.getPuntosNivel3()) {
+            this.nivelActual = 2;
+        } else if (puntosTotales >= reglasPartida.getPuntosNivel3()) {
+            this.nivelActual = 3;
+        }
     }
-    
-    
-    
-    
 
+    /**
+     * Actualiza todos los puntos y estadisticas cuando un pedido termina / es
+     * cancelado etc además llama a actualizarNivel con el nuevo punteo
+     *
+     * @param pedido
+     */
+    public void ProcesarPedidoFinalizado(Pedido pedido) {
+        if (pedido.isCancelado()) {
+            pedidosCancelados++;
+            penalizaciones += reglasPunteo.getPedidoCancelado();
+        } else if (pedido.isNoEntregado()) {
+            pedidosIncompletos++;
+            penalizaciones += reglasPunteo.getPedidoIncompleto();
+        } else if (pedido.isEntregado()) {
+            puntosPositivos += reglasPunteo.getBonoPedidoCorrecto();
+            pedidosExitosos++;
+        }
 
+        if (pedido.aplicaBonoAntesDeTiempo()) {
+            puntosPositivos += reglasPunteo.getBonoTiempoOptimo();
+        }
+        if (pedido.aplicaBonoEficiencia()) {
+            bonosPorEficiencia += reglasPunteo.getBonoEficiencia();
+            puntosPositivos += reglasPunteo.getBonoEficiencia();
+        }
+
+        this.puntosTotales = puntosPositivos - penalizaciones;
+        this.actualizarNivel();
+    }
+
+    public int getPuntosPositivos() {
+        return puntosPositivos;
+    }
+
+    public int getPedidosExitosos() {
+        return pedidosExitosos;
+    }
+
+    public int getPedidosIncompletos() {
+        return pedidosIncompletos;
+    }
+
+    public int getPedidosCancelados() {
+        return pedidosCancelados;
+    }
+
+    public int getBonosPorEficiencia() {
+        return bonosPorEficiencia;
+    }
+
+    public int getPenalizaciones() {
+        return penalizaciones;
+    }
+
+    public int getPuntosTotales() {
+        return puntosTotales;
+    }
 }

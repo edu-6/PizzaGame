@@ -22,13 +22,13 @@ public class Reloj implements Runnable {
             try {
                 tiempoRestante -= 1000;
                 // actualizar panel de reloj
-                Thread.sleep(1000); // dormir el hilo 1s
-                
+                Thread.sleep(1000); // dormir el hilo 1 segundo
+
             } catch (InterruptedException ex) {
             }
         }
     }
-
+    
     public int getTiempoRestante() {
         return tiempoRestante;
     }

@@ -4,8 +4,10 @@
  */
 package com.mycompany.pizzaexpress.backend.modelos.partida;
 
+import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionDePartida;
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionPunteos;
+import com.mycompany.pizzaexpress.frontend.partida.PanelPartida;
 import java.util.ArrayList;
 
 /**
@@ -15,13 +17,14 @@ import java.util.ArrayList;
 public class Partida implements Runnable {
 
     private Thread hiloReloj;
-    // private Panel para mostrar pues
+    private PanelPartida panelPartida; // frontend
 
     private ConfiguracionDePartida reglasPartida;
     private ConfiguracionPunteos reglasPunteo;
     private GeneradorDePedidos generadorPedidos;
     private ArrayList<Pedido> listaPedidos = new ArrayList();
 
+    private int numeroPedidos;
     private int pedidosActivos;
     private int nivelActual = 1;
 
@@ -50,7 +53,10 @@ public class Partida implements Runnable {
     }
 
     public void agregarNuevoPedido(Pedido pedido) {
+        numeroPedidos++;
+        pedido.setNumeroPedido(numeroPedidos);
         this.listaPedidos.add(pedido);
+        this.panelPartida.agregarNuevoPedido(pedido);
     }
 
     public int getCantidadPedidosActivos() {
@@ -70,6 +76,10 @@ public class Partida implements Runnable {
         } else if (puntosTotales >= reglasPartida.getPuntosNivel3()) {
             this.nivelActual = 3;
         }
+    }
+    
+    public void  mostrarErrorEnPedido(String mesaje){
+        panelPartida.mostarErrorEnPedido(mesaje);
     }
 
     /**
@@ -128,5 +138,14 @@ public class Partida implements Runnable {
 
     public int getPuntosTotales() {
         return puntosTotales;
+    }
+
+    public void setPanelPartida(PanelPartida panelPartida) {
+        this.panelPartida = panelPartida;
+    }
+    
+    
+    public int getLimitePedidosActivos(){
+        return this.reglasPartida.getLimitePedidosActivos();
     }
 }

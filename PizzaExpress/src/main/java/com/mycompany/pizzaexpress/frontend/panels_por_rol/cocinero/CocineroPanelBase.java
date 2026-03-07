@@ -5,7 +5,9 @@
 package com.mycompany.pizzaexpress.frontend.panels_por_rol.cocinero;
 
 import com.mycompany.pizzaexpress.frontend.FrameBase;
+import com.mycompany.pizzaexpress.frontend.partida.PanelPartida;
 import java.awt.BorderLayout;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -30,6 +32,24 @@ public class CocineroPanelBase extends javax.swing.JPanel {
     private void iniciarPanel(){
         this.setLayout(new BorderLayout());
         this.add(new CocineroPanel(this), BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    
+    /**
+     * Inicia el panel de cocinero pero con un mensaje de error
+     * @param mensaje 
+     */
+    public void cancelarPartidaPorError(String mensaje){
+        limpiarFrame();
+        this.iniciarPanel();
+        JOptionPane.showMessageDialog(padre, mensaje);
+        
+    }
+    
+    public void mostrarPanelNuevaPartida(){
+        limpiarFrame();
+        this.add(new PanelPartida(this), BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
     }

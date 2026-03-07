@@ -26,7 +26,6 @@ public class FrameBase extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         mostrarLogin();
-        //this.add(new AdminSucursalPanel(), BorderLayout.CENTER);
     }
 
     private void reiniciarFrame() {
@@ -59,7 +58,7 @@ public class FrameBase extends javax.swing.JFrame {
                 this.add(new TenderoBase(this), BorderLayout.CENTER);
                 
                 break;
-            case "COCINCERO":
+            case "COCINERO":
                 this.add(new CocineroPanelBase(this), BorderLayout.CENTER);
                 break;
         }

@@ -4,17 +4,63 @@
  */
 package com.mycompany.pizzaexpress.frontend.partida;
 
+import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
+import com.mycompany.pizzaexpress.backend.modelos.partida.GeneradorPartidas;
+import com.mycompany.pizzaexpress.backend.modelos.partida.Partida;
+import com.mycompany.pizzaexpress.backend.modelos.partida.Pedido;
+import com.mycompany.pizzaexpress.frontend.panels_por_rol.cocinero.CocineroPanelBase;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author edu
  */
 public class PanelPartida extends javax.swing.JPanel {
 
+    private CocineroPanelBase panelPadre;
+    private GeneradorPartidas generadorPartidas;
+    private Partida partida;
+    private Thread  partidaHilo;
+
     /**
      * Creates new form PanelPartida
      */
-    public PanelPartida() {
+    public PanelPartida(CocineroPanelBase panelPadre) {
         initComponents();
+        this.panelPadre = panelPadre;
+        this.generadorPartidas = new GeneradorPartidas();
+
+        try {
+            partida = generadorPartidas.generarNuevaPartida();
+            this.organizarPanelPedidos(partida.getLimitePedidosActivos());
+            partida.setPanelPartida(this);
+            partidaHilo = new Thread(partida);
+            partidaHilo.start();
+        } catch (ExceptionGenerica ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+
+    private void organizarPanelPedidos(int limite) {
+        int columnas = 7;
+        //int columnas = (int) Math.ceil(Math.sqrt(limite));
+        int filas = (int) Math.ceil((double ) limite/columnas);
+        panelPedidos.setLayout(new java.awt.GridLayout(filas, columnas, 10, 10));
+        panelPedidos.revalidate();
+        panelPedidos.repaint();
+    }
+
+    public void agregarNuevoPedido(Pedido pedido) {
+        panelPedidos.add(new PanelPedido(pedido,panelPedidos));
+        panelPedidos.revalidate();
+        panelPedidos.repaint();
+        this.revalidate();
+        this.repaint();
+    }
+    
+    
+    public void mostarErrorEnPedido(String mensaje){
+        this.panelPadre.cancelarPartidaPorError(mensaje);
     }
 
     /**
@@ -26,19 +72,74 @@ public class PanelPartida extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panelPunteos = new javax.swing.JPanel();
+        panelDetalles = new javax.swing.JPanel();
+        panelPedidos = new javax.swing.JPanel();
+
+        panelPunteos.setBackground(new java.awt.Color(255, 204, 102));
+
+        javax.swing.GroupLayout panelPunteosLayout = new javax.swing.GroupLayout(panelPunteos);
+        panelPunteos.setLayout(panelPunteosLayout);
+        panelPunteosLayout.setHorizontalGroup(
+            panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 858, Short.MAX_VALUE)
+        );
+        panelPunteosLayout.setVerticalGroup(
+            panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 193, Short.MAX_VALUE)
+        );
+
+        panelDetalles.setBackground(new java.awt.Color(255, 255, 204));
+
+        javax.swing.GroupLayout panelDetallesLayout = new javax.swing.GroupLayout(panelDetalles);
+        panelDetalles.setLayout(panelDetallesLayout);
+        panelDetallesLayout.setHorizontalGroup(
+            panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 193, Short.MAX_VALUE)
+        );
+        panelDetallesLayout.setVerticalGroup(
+            panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 558, Short.MAX_VALUE)
+        );
+
+        panelPedidos.setBackground(new java.awt.Color(102, 102, 102));
+
+        javax.swing.GroupLayout panelPedidosLayout = new javax.swing.GroupLayout(panelPedidos);
+        panelPedidos.setLayout(panelPedidosLayout);
+        panelPedidosLayout.setHorizontalGroup(
+            panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelPedidosLayout.setVerticalGroup(
+            panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 858, Short.MAX_VALUE)
+            .addComponent(panelPunteos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(panelDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 656, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelPunteos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel panelDetalles;
+    private javax.swing.JPanel panelPedidos;
+    private javax.swing.JPanel panelPunteos;
     // End of variables declaration//GEN-END:variables
 }

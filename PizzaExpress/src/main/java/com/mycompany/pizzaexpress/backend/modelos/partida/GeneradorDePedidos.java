@@ -35,8 +35,7 @@ public class GeneradorDePedidos implements Runnable {
             try {
                 intentarGenerarPedido();
             } catch (ExceptionGenerica ex) {
-               // pendiente de manejar
-               ex.printStackTrace();
+               partida.mostrarErrorEnPedido(ex.getMessage());
             }
             try {
                 Thread.sleep(tiempoEntrePedidos);

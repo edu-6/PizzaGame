@@ -3,24 +3,29 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package com.mycompany.pizzaexpress.frontend.panels_por_rol.cocinero;
+import com.mycompany.pizzaexpress.backend.db.PedidosDB;
+import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.Sesion;
-
+import javax.swing.JOptionPane;
 /**
  *
  * @author edu
  */
 public class CocineroPanel extends javax.swing.JPanel {
     private CocineroPanelBase padre;
+    private PedidosDB db;
     /**
      * Creates new form SuperAdminPanel
      */
     public CocineroPanel(CocineroPanelBase padre) {
         initComponents();
+        this.db = new PedidosDB();
         this.padre = padre;
         this.cocineroNombre.setText(Sesion.getUsuario().getNombre());
         this.sucursalNombre.setText(Sesion.getUsuario().getNombreSucursal());
-        
     }
+
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -139,7 +144,12 @@ public class CocineroPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void nuevaPartidaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaPartidaBtnActionPerformed
-        
+        try {
+            this.db.hayProductos(Sesion.getUsuario().getIdSucursal());
+            this.padre.mostrarPanelNuevaPartida();
+        } catch (ExceptionGenerica ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }//GEN-LAST:event_nuevaPartidaBtnActionPerformed
 
     private void cerrarSesionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionBtnActionPerformed

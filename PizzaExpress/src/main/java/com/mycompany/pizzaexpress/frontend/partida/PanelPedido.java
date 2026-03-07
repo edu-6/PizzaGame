@@ -4,8 +4,10 @@
  */
 package com.mycompany.pizzaexpress.frontend.partida;
 
+import com.mycompany.pizzaexpress.backend.modelos.partida.ConvertidorDeTiempo;
 import com.mycompany.pizzaexpress.backend.modelos.partida.Pedido;
 import java.awt.Dimension;
+import java.time.Duration;
 import javax.swing.JPanel;
 
 /**
@@ -16,16 +18,19 @@ public class PanelPedido extends javax.swing.JPanel {
 
     private JPanel panelContenedor;
     private Pedido pedido;
+    private ConvertidorDeTiempo convertidorDeTiempo;
 
     /**
      * Creates new form NewJPanel
      */
     public PanelPedido(Pedido pedido, JPanel panelContenedor) {
         initComponents();
+        this.convertidorDeTiempo= new ConvertidorDeTiempo();
+        
         this.setSize(new Dimension(293, 246));
         this.pedido = pedido;
         this.panelContenedor = panelContenedor;
-        this.numeroPedido.setText( "No."+pedido.getNumeroPedido());
+        this.numeroPedido.setText("No." + pedido.getNumeroPedido());
         Thread pedidoHilo = new Thread(pedido);
         actualizarEstado();
         pedido.setPanelPedido(this);
@@ -39,7 +44,7 @@ public class PanelPedido extends javax.swing.JPanel {
     }
 
     public void actualizarEstado() {
-        if(!pedido.sePuedeCancelar()){ // si el pedido no se puede cancelar
+        if (!pedido.sePuedeCancelar()) { // si el pedido no se puede cancelar
             this.btnCancelar.setEnabled(false);
         }
         String path = "/com/mycompany/pizzaexpress/imagenes/";
@@ -78,7 +83,7 @@ public class PanelPedido extends javax.swing.JPanel {
     }
 
     public void actualizarTiempo(int tiempoRestante) {
-        this.tiempoLbl.setText(String.valueOf(tiempoRestante));
+        tiempoLbl.setText(String.format(convertidorDeTiempo.formatearTiempo(tiempoRestante)));
         this.revalidate();
         this.repaint();
     }
@@ -90,6 +95,7 @@ public class PanelPedido extends javax.swing.JPanel {
     private void cancelarPedido() {
         pedido.setActivo(false);
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -128,19 +134,15 @@ public class PanelPedido extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnAvanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(numeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(tiempoLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(numeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(tiempoLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(estadoLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btnAvanzar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(estadoLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

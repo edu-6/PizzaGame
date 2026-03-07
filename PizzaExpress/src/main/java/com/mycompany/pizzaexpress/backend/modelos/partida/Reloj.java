@@ -11,8 +11,10 @@ package com.mycompany.pizzaexpress.backend.modelos.partida;
 public class Reloj implements Runnable {
 
     private int tiempoRestante;
+    private Partida partida;
 
-    public Reloj(int tiempoRestante) {
+    public Reloj(int tiempoRestante, Partida partida) {
+        this.partida = partida;
         this.tiempoRestante = tiempoRestante;
     }
 
@@ -21,8 +23,8 @@ public class Reloj implements Runnable {
         while (tiempoRestante > 0) {
             try {
                 tiempoRestante -= 1000;
-                // actualizar panel de reloj
-                Thread.sleep(1000); // dormir el hilo 1 segundo
+                partida.actualizarTiempoFrontend(tiempoRestante);
+                Thread.sleep(1000);
 
             } catch (InterruptedException ex) {
             }

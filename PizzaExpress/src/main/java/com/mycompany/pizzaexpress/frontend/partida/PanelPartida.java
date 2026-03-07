@@ -5,11 +5,16 @@
 package com.mycompany.pizzaexpress.frontend.partida;
 
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
+import com.mycompany.pizzaexpress.backend.modelos.partida.ConvertidorDeTiempo;
 import com.mycompany.pizzaexpress.backend.modelos.partida.GeneradorPartidas;
 import com.mycompany.pizzaexpress.backend.modelos.partida.Partida;
 import com.mycompany.pizzaexpress.backend.modelos.partida.Pedido;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.cocinero.CocineroPanelBase;
+import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 /**
  *
@@ -17,18 +22,25 @@ import javax.swing.JOptionPane;
  */
 public class PanelPartida extends javax.swing.JPanel {
 
+    private ConvertidorDeTiempo convertidor;
     private CocineroPanelBase panelPadre;
     private GeneradorPartidas generadorPartidas;
     private Partida partida;
-    private Thread  partidaHilo;
+    private Thread partidaHilo;
+    private PanelDePedidos panelPedidos;
 
     /**
      * Creates new form PanelPartida
      */
     public PanelPartida(CocineroPanelBase panelPadre) {
         initComponents();
+        this.convertidor = new ConvertidorDeTiempo();
         this.panelPadre = panelPadre;
         this.generadorPartidas = new GeneradorPartidas();
+
+        this.panelDetalles.add(new PanelDetallePedido(), BorderLayout.CENTER);
+        this.repaint();
+        this.revalidate();
 
         try {
             partida = generadorPartidas.generarNuevaPartida();
@@ -40,26 +52,53 @@ public class PanelPartida extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
+    
+    public void actualizarTiempo(int tiempo){
+        this.lblTiempo.setText(convertidor.formatearTiempo(tiempo));
+    }
+    
+    
+    public void actualizarEstadisticas(){
+        // actualizar tiempo
+        this.lblTiempo.setText(convertidor.formatearTiempo(partida.getTiempoRestante()));
+        this.lblCancelados.setText(String.valueOf(partida.getPedidosCancelados()));
+        this.lblEntregados.setText(String.valueOf(partida.getPedidosExitosos()));
+        this.lblIncompletos.setText(String.valueOf(partida.getPedidosIncompletos()));
+        this.lblNivel.setText(String.valueOf(partida.getNivelActual()));
+        this.lblPuntosNetos.setText(String.valueOf(partida.getPuntosTotales()));
+        this.lblPenalizaciones.setText(String.valueOf(partida.getPenalizaciones()));
+        this.lblPuntosEficiencia.setText(String.valueOf(partida.getBonosPorEficiencia()));
+        this.repaint();
+        
+    }
 
     private void organizarPanelPedidos(int limite) {
-        int columnas = 7;
-        //int columnas = (int) Math.ceil(Math.sqrt(limite));
-        int filas = (int) Math.ceil((double ) limite/columnas);
-        panelPedidos.setLayout(new java.awt.GridLayout(filas, columnas, 10, 10));
-        panelPedidos.revalidate();
-        panelPedidos.repaint();
+        int columnas = 5;
+        contenedorPedidos.setLayout(new BorderLayout());
+
+        panelPedidos = new PanelDePedidos(this);
+        panelPedidos.setLayout(new java.awt.GridLayout(0, columnas, 10, 10));
+        JPanel contenedor = new JPanel(new BorderLayout());
+        contenedor.setBackground(panelPedidos.getBackground());
+        contenedor.add(panelPedidos, BorderLayout.NORTH);
+        JScrollPane scroll = new JScrollPane(contenedor);
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+        contenedorPedidos.removeAll();
+        contenedorPedidos.add(scroll, BorderLayout.CENTER);
+        contenedorPedidos.revalidate();
+        contenedorPedidos.repaint();
+
     }
 
     public void agregarNuevoPedido(Pedido pedido) {
-        panelPedidos.add(new PanelPedido(pedido,panelPedidos));
-        panelPedidos.revalidate();
-        panelPedidos.repaint();
-        this.revalidate();
-        this.repaint();
-    }
-    
-    
-    public void mostarErrorEnPedido(String mensaje){
+    panelPedidos.add(new PanelPedido(pedido, panelPedidos));
+    panelPedidos.revalidate();
+    panelPedidos.repaint();
+}
+
+    public void mostarErrorEnPedido(String mensaje) {
         this.panelPadre.cancelarPartidaPorError(mensaje);
     }
 
@@ -72,47 +111,301 @@ public class PanelPartida extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        tiempoLbl1 = new javax.swing.JLabel();
+        tiempoLbl2 = new javax.swing.JLabel();
+        tiempoLbl3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        puntosLbl1 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
         panelPunteos = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        lblTiempo = new javax.swing.JLabel();
+        lbl1 = new javax.swing.JLabel();
+        lblPuntosNetos = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        lblCancelados = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        lblNivel = new javax.swing.JLabel();
+        lblIncompletos = new javax.swing.JLabel();
+        lblEntregados = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        lblPenalizaciones = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        lblPuntosEficiencia = new javax.swing.JLabel();
+        terminarBtn = new javax.swing.JButton();
         panelDetalles = new javax.swing.JPanel();
-        panelPedidos = new javax.swing.JPanel();
+        contenedorPedidos = new javax.swing.JPanel();
+
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel2.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Restante: ");
+
+        jLabel3.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel3.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("Restante: ");
+
+        jLabel4.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel4.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("Restante: ");
+
+        tiempoLbl1.setBackground(new java.awt.Color(0, 0, 0));
+        tiempoLbl1.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        tiempoLbl1.setForeground(new java.awt.Color(0, 0, 0));
+        tiempoLbl1.setText("tiempo");
+
+        tiempoLbl2.setBackground(new java.awt.Color(0, 0, 0));
+        tiempoLbl2.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        tiempoLbl2.setForeground(new java.awt.Color(0, 0, 0));
+        tiempoLbl2.setText("tiempo");
+
+        tiempoLbl3.setBackground(new java.awt.Color(0, 0, 0));
+        tiempoLbl3.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        tiempoLbl3.setForeground(new java.awt.Color(0, 0, 0));
+        tiempoLbl3.setText("tiempo");
+
+        jLabel6.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel6.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("Puntos:");
+
+        puntosLbl1.setBackground(new java.awt.Color(0, 0, 0));
+        puntosLbl1.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        puntosLbl1.setForeground(new java.awt.Color(0, 0, 0));
+        puntosLbl1.setText("puntos");
+
+        jLabel7.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel7.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setText("Nivel:");
+
+        jLabel13.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel13.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel13.setText("Nivel:");
 
         panelPunteos.setBackground(new java.awt.Color(255, 204, 102));
+
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Puntos eficiencia:");
+
+        lblTiempo.setBackground(new java.awt.Color(0, 0, 0));
+        lblTiempo.setFont(new java.awt.Font("Fira Sans", 0, 60)); // NOI18N
+        lblTiempo.setForeground(new java.awt.Color(0, 0, 0));
+        lblTiempo.setText("tiempo");
+
+        lbl1.setBackground(new java.awt.Color(0, 0, 0));
+        lbl1.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        lbl1.setForeground(new java.awt.Color(0, 0, 0));
+        lbl1.setText("Netos:");
+
+        lblPuntosNetos.setBackground(new java.awt.Color(0, 0, 0));
+        lblPuntosNetos.setFont(new java.awt.Font("Fira Sans", 1, 36)); // NOI18N
+        lblPuntosNetos.setForeground(new java.awt.Color(51, 204, 0));
+        lblPuntosNetos.setText("0");
+
+        jLabel9.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel9.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLabel10.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel10.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel10.setText("Incompletos:");
+
+        jLabel11.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel11.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel11.setText("Cancelados:");
+
+        lblCancelados.setBackground(new java.awt.Color(0, 0, 0));
+        lblCancelados.setFont(new java.awt.Font("Fira Sans", 1, 36)); // NOI18N
+        lblCancelados.setForeground(new java.awt.Color(255, 51, 51));
+        lblCancelados.setText("0");
+
+        jLabel14.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel14.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel14.setText("Nivel:");
+
+        jLabel8.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel8.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel8.setText("Entregados:");
+
+        lblNivel.setBackground(new java.awt.Color(0, 0, 0));
+        lblNivel.setFont(new java.awt.Font("Fira Sans", 1, 36)); // NOI18N
+        lblNivel.setForeground(new java.awt.Color(51, 153, 255));
+        lblNivel.setText("1");
+
+        lblIncompletos.setBackground(new java.awt.Color(0, 0, 0));
+        lblIncompletos.setFont(new java.awt.Font("Fira Sans", 1, 36)); // NOI18N
+        lblIncompletos.setForeground(new java.awt.Color(255, 102, 0));
+        lblIncompletos.setText("0");
+
+        lblEntregados.setBackground(new java.awt.Color(0, 0, 0));
+        lblEntregados.setFont(new java.awt.Font("Fira Sans", 1, 36)); // NOI18N
+        lblEntregados.setForeground(new java.awt.Color(0, 0, 255));
+        lblEntregados.setText("0");
+
+        jLabel18.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel18.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(0, 0, 0));
+
+        lblPenalizaciones.setBackground(new java.awt.Color(255, 255, 255));
+        lblPenalizaciones.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        lblPenalizaciones.setForeground(new java.awt.Color(0, 0, 0));
+        lblPenalizaciones.setText("0");
+
+        jLabel12.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel12.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel12.setText("Penalizaciones:");
+
+        lblPuntosEficiencia.setBackground(new java.awt.Color(0, 0, 0));
+        lblPuntosEficiencia.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        lblPuntosEficiencia.setForeground(new java.awt.Color(0, 0, 0));
+        lblPuntosEficiencia.setText("0");
+
+        terminarBtn.setBackground(new java.awt.Color(255, 51, 0));
+        terminarBtn.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
+        terminarBtn.setForeground(new java.awt.Color(0, 0, 0));
+        terminarBtn.setText("TERMINAR");
+        terminarBtn.addActionListener(this::terminarBtnActionPerformed);
 
         javax.swing.GroupLayout panelPunteosLayout = new javax.swing.GroupLayout(panelPunteos);
         panelPunteos.setLayout(panelPunteosLayout);
         panelPunteosLayout.setHorizontalGroup(
             panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 858, Short.MAX_VALUE)
+            .addGroup(panelPunteosLayout.createSequentialGroup()
+                .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(panelPunteosLayout.createSequentialGroup()
+                        .addGap(324, 324, 324)
+                        .addComponent(jLabel18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelPunteosLayout.createSequentialGroup()
+                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelPunteosLayout.createSequentialGroup()
+                                .addGap(257, 257, 257)
+                                .addComponent(jLabel14)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblNivel))
+                            .addGroup(panelPunteosLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblPuntosEficiencia)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel9))
+                            .addGroup(panelPunteosLayout.createSequentialGroup()
+                                .addGap(281, 281, 281)
+                                .addComponent(lblPenalizaciones))
+                            .addGroup(panelPunteosLayout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(jLabel12)))
+                        .addGap(46, 46, 46)
+                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblTiempo, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelPunteosLayout.createSequentialGroup()
+                                        .addGap(296, 296, 296)
+                                        .addComponent(jLabel10))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPunteosLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                .addGroup(panelPunteosLayout.createSequentialGroup()
+                                    .addComponent(lbl1)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(lblPuntosNetos, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addGap(30, 30, 30)
+                .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPunteosLayout.createSequentialGroup()
+                        .addComponent(lblEntregados)
+                        .addContainerGap(348, Short.MAX_VALUE))
+                    .addGroup(panelPunteosLayout.createSequentialGroup()
+                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblIncompletos)
+                            .addComponent(lblCancelados))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPunteosLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(terminarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         panelPunteosLayout.setVerticalGroup(
             panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 193, Short.MAX_VALUE)
+            .addGroup(panelPunteosLayout.createSequentialGroup()
+                .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(panelPunteosLayout.createSequentialGroup()
+                            .addGap(52, 52, 52)
+                            .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblIncompletos, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addComponent(lblCancelados, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panelPunteosLayout.createSequentialGroup()
+                            .addGap(18, 18, 18)
+                            .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(panelPunteosLayout.createSequentialGroup()
+                                    .addGap(0, 0, Short.MAX_VALUE)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelPunteosLayout.createSequentialGroup()
+                                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblPuntosEficiencia, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(lblTiempo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addComponent(terminarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPunteosLayout.createSequentialGroup()
+                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblEntregados, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelPunteosLayout.createSequentialGroup()
+                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPenalizaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPuntosNetos, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(53, 53, 53))))
         );
 
         panelDetalles.setBackground(new java.awt.Color(255, 255, 204));
+        panelDetalles.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout panelDetallesLayout = new javax.swing.GroupLayout(panelDetalles);
-        panelDetalles.setLayout(panelDetallesLayout);
-        panelDetallesLayout.setHorizontalGroup(
-            panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 193, Short.MAX_VALUE)
-        );
-        panelDetallesLayout.setVerticalGroup(
-            panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 558, Short.MAX_VALUE)
-        );
+        contenedorPedidos.setBackground(new java.awt.Color(102, 102, 102));
 
-        panelPedidos.setBackground(new java.awt.Color(102, 102, 102));
-
-        javax.swing.GroupLayout panelPedidosLayout = new javax.swing.GroupLayout(panelPedidos);
-        panelPedidos.setLayout(panelPedidosLayout);
-        panelPedidosLayout.setHorizontalGroup(
-            panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout contenedorPedidosLayout = new javax.swing.GroupLayout(contenedorPedidos);
+        contenedorPedidos.setLayout(contenedorPedidosLayout);
+        contenedorPedidosLayout.setHorizontalGroup(
+            contenedorPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        panelPedidosLayout.setVerticalGroup(
-            panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        contenedorPedidosLayout.setVerticalGroup(
+            contenedorPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 345, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -121,7 +414,7 @@ public class PanelPartida extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelPunteos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(contenedorPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(panelDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -131,15 +424,47 @@ public class PanelPartida extends javax.swing.JPanel {
                 .addComponent(panelPunteos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(panelDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                    .addComponent(contenedorPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void terminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_terminarBtnActionPerformed
+        
+    }//GEN-LAST:event_terminarBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel contenedorPedidos;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel lbl1;
+    private javax.swing.JLabel lblCancelados;
+    private javax.swing.JLabel lblEntregados;
+    private javax.swing.JLabel lblIncompletos;
+    private javax.swing.JLabel lblNivel;
+    private javax.swing.JLabel lblPenalizaciones;
+    private javax.swing.JLabel lblPuntosEficiencia;
+    private javax.swing.JLabel lblPuntosNetos;
+    private javax.swing.JLabel lblTiempo;
     private javax.swing.JPanel panelDetalles;
-    private javax.swing.JPanel panelPedidos;
     private javax.swing.JPanel panelPunteos;
+    private javax.swing.JLabel puntosLbl1;
+    private javax.swing.JButton terminarBtn;
+    private javax.swing.JLabel tiempoLbl1;
+    private javax.swing.JLabel tiempoLbl2;
+    private javax.swing.JLabel tiempoLbl3;
     // End of variables declaration//GEN-END:variables
 }

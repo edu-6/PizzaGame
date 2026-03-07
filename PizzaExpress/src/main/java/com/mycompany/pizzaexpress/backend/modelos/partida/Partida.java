@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.pizzaexpress.backend.modelos.partida;
-
-import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionDePartida;
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionPunteos;
 import com.mycompany.pizzaexpress.frontend.partida.PanelPartida;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
  * @author edu
  */
 public class Partida implements Runnable {
-
+    private Reloj reloj;
     private Thread hiloReloj;
     private PanelPartida panelPartida; // frontend
 
@@ -44,7 +42,7 @@ public class Partida implements Runnable {
 
     @Override
     public void run() {
-        Reloj reloj = new Reloj(reglasPartida.getTiempoPartida());
+        reloj = new Reloj(reglasPartida.getTiempoPartida(), this);
         hiloReloj = new Thread(reloj);
         generadorPedidos = new GeneradorDePedidos(hiloReloj, this, reglasPartida);
         hiloReloj.start();
@@ -53,6 +51,7 @@ public class Partida implements Runnable {
     }
 
     public void agregarNuevoPedido(Pedido pedido) {
+        pedidosActivos++;
         numeroPedidos++;
         pedido.setNumeroPedido(numeroPedidos);
         this.listaPedidos.add(pedido);
@@ -65,6 +64,11 @@ public class Partida implements Runnable {
 
     public int getNivelActual() {
         return nivelActual;
+    }
+    
+    
+    public void actualizarTiempoFrontend(int tiempo){
+        this.panelPartida.actualizarTiempo(tiempo);
     }
 
     /**
@@ -89,6 +93,7 @@ public class Partida implements Runnable {
      * @param pedido
      */
     public void ProcesarPedidoFinalizado(Pedido pedido) {
+        pedidosActivos--;
         if (pedido.isCancelado()) {
             pedidosCancelados++;
             penalizaciones += reglasPunteo.getPedidoCancelado();
@@ -110,6 +115,7 @@ public class Partida implements Runnable {
 
         this.puntosTotales = puntosPositivos - penalizaciones;
         this.actualizarNivel();
+        this.panelPartida.actualizarEstadisticas();
     }
 
     public int getPuntosPositivos() {
@@ -147,5 +153,9 @@ public class Partida implements Runnable {
     
     public int getLimitePedidosActivos(){
         return this.reglasPartida.getLimitePedidosActivos();
+    }
+    
+    public int getTiempoRestante(){
+        return this.reloj.getTiempoRestante();
     }
 }

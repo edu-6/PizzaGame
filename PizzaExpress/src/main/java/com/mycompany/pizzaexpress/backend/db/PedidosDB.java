@@ -19,7 +19,7 @@ import java.util.Random;
  */
 public class PedidosDB {
 
-    private static final String  HAY_PRODUCTOS = "select id_sucursal FROM producto WHERE id_sucursal = ?";
+    private static final String  HAY_PRODUCTOS = "select id_sucursal FROM producto WHERE id_sucursal = ? AND activo = TRUE";
    
     private static final String SELECIONAR_N_PRODUCTOS_ACTIVOS = "SELECT * FROM producto WHERE id_sucursal = ? AND activo = TRUE ORDER BY RAND() LIMIT ?";
 
@@ -52,11 +52,15 @@ public class PedidosDB {
         }
     }
     
-    public boolean  hayProductos(int idSucursal) throws ExceptionGenerica{
+    public void  hayProductos(int idSucursal) throws ExceptionGenerica{
         try (Connection conn = ConexionDB.getConnection(); PreparedStatement pstmt = conn.prepareStatement(HAY_PRODUCTOS)) {
             pstmt.setInt(1, idSucursal);
             ResultSet rs = pstmt.executeQuery();
-            return rs.next();
+           if(rs.next()){
+               
+           }else{
+               throw new ExceptionGenerica("No hay productos en la sucursal, no se pueden generar pedidos");
+           }
         } catch (SQLException e) {
             throw new ExceptionGenerica("Error al verificar existencia de productos");
         }

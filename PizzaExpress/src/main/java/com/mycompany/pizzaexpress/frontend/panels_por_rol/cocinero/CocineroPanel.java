@@ -144,16 +144,12 @@ public class CocineroPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void nuevaPartidaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaPartidaBtnActionPerformed
-        /*try {
-            if (this.db.hayProductos(Sesion.getUsuario().getIdSucursal())) {
-                this.padre.mostrarPanelNuevaPartida();
-            }else{
-                JOptionPane.showMessageDialog(padre, " No hay productos en esta sucursal");
-            }
-            
+        try {
+            this.db.hayProductos(Sesion.getUsuario().getIdSucursal());
+            this.padre.mostrarPanelNuevaPartida();
         } catch (ExceptionGenerica ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
-        }*/
+        }
     }//GEN-LAST:event_nuevaPartidaBtnActionPerformed
 
     private void cerrarSesionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionBtnActionPerformed

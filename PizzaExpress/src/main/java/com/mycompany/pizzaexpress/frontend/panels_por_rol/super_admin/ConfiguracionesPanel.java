@@ -17,13 +17,15 @@ import javax.swing.JOptionPane;
 public class ConfiguracionesPanel extends javax.swing.JPanel {
 
     private ConfiguracionesCrudService crudService = new ConfiguracionesCrudService();
-     private SuperAdminBase padre;
+    private SuperAdminBase padre;
+
     /**
      * Creates new form ConfiguracionesPanel
      */
     public ConfiguracionesPanel(SuperAdminBase padre) {
         this.padre = padre;
         initComponents();
+        this.configurarSpinnersTiempo();
         rellenarCampos();
     }
 
@@ -38,17 +40,20 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
     }
 
     private void rellenarSpiners(ConfiguracionDePartida part, ConfiguracionPunteos punt) {
-        //configuraciones de partida
-        this.tiempoPartida.setValue(part.getTiempoPartida());
-        this.tiempoNivel1.setValue(part.getTiempoNivel1());
-        this.tiempoNivel2.setValue(part.getTiempoNivel2());
-        this.tiempoNivel3.setValue(part.getTiempoNivel3());
+        
+        // Configuraciones de tiempo 
+        setearTiempoDesdeMs(this.tiempoPartida, (long) part.getTiempoPartida());
+        setearTiempoDesdeMs(this.tiempoNivel1, (long) part.getTiempoNivel1());
+        setearTiempoDesdeMs(this.tiempoNivel2, (long) part.getTiempoNivel2());
+        setearTiempoDesdeMs(this.tiempoNivel3, (long) part.getTiempoNivel3());
+        setearTiempoDesdeMs(this.tiempoEntrePedidos, (long) part.getTiempoEntrePedidos());
+
+        // Campos numéricos
         this.puntosNivel2.setValue(part.getPuntosNivel2());
         this.puntosNivel3.setValue(part.getPuntosNivel3());
-        this.tiempoEntrePedidos.setValue(part.getTiempoEntrePedidos());
         this.maximosPedidosActivos.setValue(part.getLimitePedidosActivos());
 
-        //Configuraciones de punteos
+        // Configuraciones
         this.pedidoCorrecto.setValue(punt.getBonoPedidoCorrecto());
         this.bonoEficiencia.setValue(punt.getBonoEficiencia());
         this.pedidoOptimo.setValue(punt.getBonoTiempoOptimo());
@@ -58,13 +63,13 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
 
     private void guardarConfiguraciones() throws ExceptionGenerica {
         ConfiguracionDePartida nuevaConfigPartida = new ConfiguracionDePartida(
-                (int) tiempoPartida.getValue(),
-                (int) tiempoNivel1.getValue(),
-                (int) tiempoNivel2.getValue(),
-                (int) tiempoNivel3.getValue(),
+                (int) obtenerMsDesdeSpinner(tiempoPartida),
+                (int) obtenerMsDesdeSpinner(tiempoNivel1),
+                (int) obtenerMsDesdeSpinner(tiempoNivel2),
+                (int) obtenerMsDesdeSpinner(tiempoNivel3),
                 (int) puntosNivel2.getValue(),
                 (int) puntosNivel3.getValue(),
-                (int) tiempoEntrePedidos.getValue(),
+                (int) obtenerMsDesdeSpinner(tiempoEntrePedidos),
                 (int) maximosPedidosActivos.getValue()
         );
 
@@ -75,12 +80,45 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
                 (int) pedidoCancelado.getValue(),
                 (int) pedidoIncompleto.getValue()
         );
-        
-
-            crudService.editarReglasPartida(nuevaConfigPartida);
-            crudService.editarReglasPunteos(nuevaConfigPunteos);
+        crudService.editarReglasPartida(nuevaConfigPartida);
+        crudService.editarReglasPunteos(nuevaConfigPunteos);
     }
-    
+
+    private void configurarSpinnersTiempo() {
+        javax.swing.JSpinner[] spinnersTiempo = {
+            tiempoEntrePedidos,
+            tiempoNivel1,
+            tiempoNivel2,
+            tiempoNivel3,
+            tiempoPartida
+        };
+
+        for (javax.swing.JSpinner s : spinnersTiempo) {
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+            cal.set(java.util.Calendar.MINUTE, 0);
+            cal.set(java.util.Calendar.SECOND, 0);
+            cal.set(java.util.Calendar.MILLISECOND, 0);
+
+            javax.swing.SpinnerDateModel model = new javax.swing.SpinnerDateModel(cal.getTime(), null, null, java.util.Calendar.SECOND);
+            s.setModel(model);
+
+            javax.swing.JSpinner.DateEditor editor = new javax.swing.JSpinner.DateEditor(s, "mm:ss");
+            s.setEditor(editor);
+        }
+    }
+
+    private long obtenerMsDesdeSpinner(javax.swing.JSpinner spinner) {
+        java.util.Date d = (java.util.Date) spinner.getValue();
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(d);
+        return (cal.get(java.util.Calendar.MINUTE) * 60000L) + (cal.get(java.util.Calendar.SECOND) * 1000L);
+    }
+
+    private void setearTiempoDesdeMs(javax.swing.JSpinner spinner, long ms) {
+        spinner.setValue(new java.util.Date(ms));
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -92,6 +130,7 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
         jSpinner8 = new javax.swing.JSpinner();
         jLabel19 = new javax.swing.JLabel();
         jSpinner11 = new javax.swing.JSpinner();
+        jLabel25 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         guardarBtn = new javax.swing.JButton();
@@ -115,6 +154,7 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
         puntosNivel3 = new javax.swing.JSpinner();
         jLabel24 = new javax.swing.JLabel();
         maximosPedidosActivos = new javax.swing.JSpinner();
+        jLabel26 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
@@ -154,6 +194,11 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
         jLabel19.setFont(new java.awt.Font("Fira Sans", 0, 24)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(0, 0, 0));
         jLabel19.setText("Pedido correcto:");
+
+        jLabel25.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel25.setFont(new java.awt.Font("Fira Sans", 1, 24)); // NOI18N
+        jLabel25.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel25.setText("Puntos para alcanzar niveles");
 
         setBackground(new java.awt.Color(255, 255, 204));
 
@@ -264,6 +309,11 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
 
         maximosPedidosActivos.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
 
+        jLabel26.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel26.setFont(new java.awt.Font("Fira Sans", 1, 24)); // NOI18N
+        jLabel26.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel26.setText("Los tiempos en ( mm : ss)");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -276,6 +326,16 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tiempoEntrePedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(maximosPedidosActivos, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel15)
@@ -285,24 +345,14 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel8)
                                 .addGap(18, 18, 18)
                                 .addComponent(puntosNivel2)))
-                        .addContainerGap())
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tiempoEntrePedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(maximosPedidosActivos, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                        .addGap(51, 51, 51)
+                        .addComponent(jLabel26)
+                        .addContainerGap())))
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel14)
                             .addComponent(jLabel11))
@@ -311,11 +361,8 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
                             .addComponent(tiempoNivel2, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
                             .addComponent(tiempoNivel1)
                             .addComponent(tiempoNivel3)))
+                    .addComponent(jLabel12)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel12))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tiempoPartida, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -351,7 +398,9 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
                 .addComponent(jLabel12)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(puntosNivel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(puntosNivel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel26))
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -539,9 +588,8 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
             this.guardarConfiguraciones();
             this.padre.regresar();
         } catch (ExceptionGenerica ex) {
-           JOptionPane.showMessageDialog(this, ex.getMessage());
+            JOptionPane.showMessageDialog(this, ex.getMessage());
         }
-       
     }//GEN-LAST:event_guardarBtnActionPerformed
 
 
@@ -565,6 +613,8 @@ public class ConfiguracionesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

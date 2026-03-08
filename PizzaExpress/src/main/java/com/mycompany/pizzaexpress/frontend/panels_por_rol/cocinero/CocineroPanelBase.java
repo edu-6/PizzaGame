@@ -4,7 +4,9 @@
  */
 package com.mycompany.pizzaexpress.frontend.panels_por_rol.cocinero;
 
+import com.mycompany.pizzaexpress.backend.modelos.partida.Partida;
 import com.mycompany.pizzaexpress.frontend.FrameBase;
+import com.mycompany.pizzaexpress.frontend.partida.PanelFinPartida;
 import com.mycompany.pizzaexpress.frontend.partida.PanelPartida;
 import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
@@ -29,6 +31,11 @@ public class CocineroPanelBase extends javax.swing.JPanel {
         this.padre.mostrarLogin();
     }
     
+    public void reiniciarPanel(){
+        limpiarFrame();
+        this.iniciarPanel();
+    }
+    
     private void iniciarPanel(){
         this.setLayout(new BorderLayout());
         this.add(new CocineroPanel(this), BorderLayout.CENTER);
@@ -50,6 +57,13 @@ public class CocineroPanelBase extends javax.swing.JPanel {
     public void mostrarPanelNuevaPartida(){
         limpiarFrame();
         this.add(new PanelPartida(this), BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+    
+    public void irAlPanelFinPartida(Partida partida){
+        limpiarFrame();
+        this.add(new PanelFinPartida(partida, this), BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
     }

@@ -29,9 +29,17 @@ public class Reloj implements Runnable {
             } catch (InterruptedException ex) {
             }
         }
+        this.partida.avisarPartidaTerminada();
     }
     
     public int getTiempoRestante() {
         return tiempoRestante;
     }
+
+    public void acabarTiempo(){
+        this.tiempoRestante = 0;
+    }
+    
+    
+    
 }

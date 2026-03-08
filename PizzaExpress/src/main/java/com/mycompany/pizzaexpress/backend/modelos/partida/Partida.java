@@ -49,6 +49,15 @@ public class Partida implements Runnable {
         Thread hiloGenerador = new Thread(generadorPedidos);
         hiloGenerador.start();
     }
+    
+    // metodos para el fin de partida
+    public void acabarPartida(){
+        this.reloj.acabarTiempo();
+    }
+    
+    public void avisarPartidaTerminada(){
+        this.panelPartida.irAlPanelFinPartida();
+    }
 
     public void agregarNuevoPedido(Pedido pedido) {
         pedidosActivos++;

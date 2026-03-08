@@ -21,7 +21,7 @@ import javax.swing.ScrollPaneConstants;
  * @author edu
  */
 public class PanelPartida extends javax.swing.JPanel {
-
+    
     private ConvertidorDeTiempo convertidor;
     private CocineroPanelBase panelPadre;
     private GeneradorPartidas generadorPartidas;
@@ -56,7 +56,16 @@ public class PanelPartida extends javax.swing.JPanel {
     public void actualizarTiempo(int tiempo){
         this.lblTiempo.setText(convertidor.formatearTiempo(tiempo));
     }
+
+    public void irAlPanelFinPartida(){
+       this.panelPadre.irAlPanelFinPartida(partida);
+    }
     
+    
+    private void cancelarPartidaEnCurso(){
+        this.partida.acabarPartida();
+        this.irAlPanelFinPartida();
+    }
     
     public void actualizarEstadisticas(){
         // actualizar tiempo
@@ -430,7 +439,8 @@ public class PanelPartida extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void terminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_terminarBtnActionPerformed
-        
+
+       this.cancelarPartidaEnCurso();
     }//GEN-LAST:event_terminarBtnActionPerformed
 
 

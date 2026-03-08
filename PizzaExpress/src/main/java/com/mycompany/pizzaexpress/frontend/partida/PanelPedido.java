@@ -7,7 +7,6 @@ package com.mycompany.pizzaexpress.frontend.partida;
 import com.mycompany.pizzaexpress.backend.modelos.partida.ConvertidorDeTiempo;
 import com.mycompany.pizzaexpress.backend.modelos.partida.Pedido;
 import java.awt.Dimension;
-import java.time.Duration;
 import javax.swing.JPanel;
 
 /**
@@ -16,6 +15,7 @@ import javax.swing.JPanel;
  */
 public class PanelPedido extends javax.swing.JPanel {
 
+    private PanelPartida panelPartida;
     private JPanel panelContenedor;
     private Pedido pedido;
     private ConvertidorDeTiempo convertidorDeTiempo;
@@ -23,8 +23,9 @@ public class PanelPedido extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public PanelPedido(Pedido pedido, JPanel panelContenedor) {
+    public PanelPedido(Pedido pedido, JPanel panelContenedor, PanelPartida panelPartida) {
         initComponents();
+        this.panelPartida = panelPartida;
         this.convertidorDeTiempo= new ConvertidorDeTiempo();
         
         this.setSize(new Dimension(293, 246));
@@ -162,6 +163,7 @@ public class PanelPedido extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAvanzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvanzarActionPerformed
+        this.panelPartida.mostrarDetallePedido(pedido);
         this.avanzarPedido();
         this.actualizarEstado();
     }//GEN-LAST:event_btnAvanzarActionPerformed

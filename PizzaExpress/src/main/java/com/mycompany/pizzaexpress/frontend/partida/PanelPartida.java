@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-
 /**
  *
  * @author edu
@@ -36,9 +35,9 @@ public class PanelPartida extends javax.swing.JPanel {
         initComponents();
         this.convertidor = new ConvertidorDeTiempo();
         this.panelPadre = panelPadre;
-        this.generadorPartidas = new GeneradorPartidas();
+        this.generadorPartidas = new GeneradorPartidas();   
 
-        this.panelDetalles.add(new PanelDetallePedido(), BorderLayout.CENTER);
+        this.panelDetalles.add(new PanelBaseDetalle(), BorderLayout.CENTER);
         this.repaint();
         this.revalidate();
 
@@ -63,7 +62,7 @@ public class PanelPartida extends javax.swing.JPanel {
     
     
     private void cancelarPartidaEnCurso(){
-        this.partida.acabarPartida();
+        this.partida.cancelarPartida();
         this.irAlPanelFinPartida();
     }
     
@@ -100,9 +99,19 @@ public class PanelPartida extends javax.swing.JPanel {
         contenedorPedidos.repaint();
 
     }
+    
+    
+    public void mostrarDetallePedido(Pedido pedido){
+        this.panelDetalles.removeAll();
+        this.panelDetalles.add(new PanelDetallePedido(pedido, this.panelDetalles), BorderLayout.CENTER);
+        this.panelDetalles.revalidate();
+        this.panelDetalles.repaint();
+        this.revalidate();
+        this.repaint();
+    }
 
     public void agregarNuevoPedido(Pedido pedido) {
-    panelPedidos.add(new PanelPedido(pedido, panelPedidos));
+    panelPedidos.add(new PanelPedido(pedido, panelPedidos, this));
     panelPedidos.revalidate();
     panelPedidos.repaint();
 }

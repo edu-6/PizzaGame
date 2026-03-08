@@ -31,17 +31,16 @@ public class GeneradorDePedidos implements Runnable {
 
     @Override
     public void run() {
-        while (relojPartida.isAlive()) {
-            try {
-                intentarGenerarPedido();
-            } catch (ExceptionGenerica ex) {
-               partida.mostrarErrorEnPedido(ex.getMessage());
-            }
-            try {
-                Thread.sleep(tiempoEntrePedidos);
-            } catch (InterruptedException ex) {
-            }
+        while (relojPartida.isAlive() && partida.isPartidaEnCurso()) {
+        try {
+            intentarGenerarPedido();
+            Thread.sleep(tiempoEntrePedidos);
+        } catch (InterruptedException ex) {
+            return;
+        } catch (ExceptionGenerica ex) {
+            partida.mostrarErrorEnPedido(ex.getMessage());
         }
+    }
     }
 
     /**
@@ -54,6 +53,7 @@ public class GeneradorDePedidos implements Runnable {
                     pedidosDB.obtenerProductosAleatorios(Sesion.getUsuario().getIdSucursal()),
                     relojPartida, partida);
             this.partida.agregarNuevoPedido(pedido);
+            System.out.println("Se generó pedido");
         }
     }
 

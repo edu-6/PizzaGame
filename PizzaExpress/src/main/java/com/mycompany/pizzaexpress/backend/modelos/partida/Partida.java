@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.pizzaexpress.backend.modelos.partida;
+
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionDePartida;
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionPunteos;
 import com.mycompany.pizzaexpress.frontend.partida.PanelPartida;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
  * @author edu
  */
 public class Partida implements Runnable {
+
     private Reloj reloj;
     private Thread hiloReloj;
     private PanelPartida panelPartida; // frontend
@@ -26,6 +28,8 @@ public class Partida implements Runnable {
     private int pedidosActivos;
     private int nivelActual = 1;
 
+    private int pedidosContados;
+
     // atributos para la db
     private int puntosPositivos;
     private int pedidosExitosos;
@@ -35,6 +39,8 @@ public class Partida implements Runnable {
     private int penalizaciones;
     private int puntosTotales;
 
+    private volatile boolean partidaEnCurso = true;
+
     public Partida(ConfiguracionDePartida reglasPartida, ConfiguracionPunteos reglasPunteo) {
         this.reglasPartida = reglasPartida;
         this.reglasPunteo = reglasPunteo;
@@ -42,6 +48,7 @@ public class Partida implements Runnable {
 
     @Override
     public void run() {
+        partidaEnCurso = true;
         reloj = new Reloj(reglasPartida.getTiempoPartida(), this);
         hiloReloj = new Thread(reloj);
         generadorPedidos = new GeneradorDePedidos(hiloReloj, this, reglasPartida);
@@ -49,17 +56,33 @@ public class Partida implements Runnable {
         Thread hiloGenerador = new Thread(generadorPedidos);
         hiloGenerador.start();
     }
-    
+
     // metodos para el fin de partida
-    public void acabarPartida(){
-        this.reloj.acabarTiempo();
+    public void cancelarPartida() {
+        this.partidaEnCurso = false;
+        if (this.reloj != null) {
+            this.reloj.acabarTiempo();
+        }
+        if (this.hiloReloj != null) {
+            this.hiloReloj.interrupt();
+        }
     }
-    
-    public void avisarPartidaTerminada(){
+
+    public boolean isPartidaEnCurso() {
+        return partidaEnCurso;
+    }
+
+    public boolean yaTerminoDeContar() {
+        return this.numeroPedidos == this.pedidosContados;
+    }
+
+    public void avisarPartidaTerminada() {
+        this.partidaEnCurso = false;
         this.panelPartida.irAlPanelFinPartida();
     }
 
     public void agregarNuevoPedido(Pedido pedido) {
+        System.out.println("Agregó #"+pedido.getNumeroPedido());
         pedidosActivos++;
         numeroPedidos++;
         pedido.setNumeroPedido(numeroPedidos);
@@ -74,9 +97,8 @@ public class Partida implements Runnable {
     public int getNivelActual() {
         return nivelActual;
     }
-    
-    
-    public void actualizarTiempoFrontend(int tiempo){
+
+    public void actualizarTiempoFrontend(int tiempo) {
         this.panelPartida.actualizarTiempo(tiempo);
     }
 
@@ -90,8 +112,8 @@ public class Partida implements Runnable {
             this.nivelActual = 3;
         }
     }
-    
-    public void  mostrarErrorEnPedido(String mesaje){
+
+    public void mostrarErrorEnPedido(String mesaje) {
         panelPartida.mostarErrorEnPedido(mesaje);
     }
 
@@ -102,6 +124,8 @@ public class Partida implements Runnable {
      * @param pedido
      */
     public void ProcesarPedidoFinalizado(Pedido pedido) {
+        System.out.println("Contabilizado #"+pedido.getNumeroPedido());
+        pedidosContados++;
         pedidosActivos--;
         if (pedido.isCancelado()) {
             pedidosCancelados++;
@@ -158,13 +182,12 @@ public class Partida implements Runnable {
     public void setPanelPartida(PanelPartida panelPartida) {
         this.panelPartida = panelPartida;
     }
-    
-    
-    public int getLimitePedidosActivos(){
+
+    public int getLimitePedidosActivos() {
         return this.reglasPartida.getLimitePedidosActivos();
     }
-    
-    public int getTiempoRestante(){
+
+    public int getTiempoRestante() {
         return this.reloj.getTiempoRestante();
     }
 }

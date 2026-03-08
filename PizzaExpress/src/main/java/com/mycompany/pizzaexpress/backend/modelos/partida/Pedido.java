@@ -47,6 +47,7 @@ public class Pedido implements Runnable {
     @Override
     public void run() {
         while (pedidoEstaVivo()) {
+            System.out.println("No."+ this.getNumeroPedido()+ "vivo");
             try {
                 Thread.sleep(1000);
                 tiempoRestante -= 1000;
@@ -67,9 +68,9 @@ public class Pedido implements Runnable {
     }
 
     private boolean pedidoEstaVivo() {
-        return relojPartida.isAlive()
-                && tiempoRestante > 0
-                && activo;
+        return partida.isPartidaEnCurso() 
+            && tiempoRestante > 0 
+            && activo;
     }
 
     /**
@@ -141,10 +142,6 @@ public class Pedido implements Runnable {
         return noEntregado;
     }
 
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
-
     public void setPanelPedido(PanelPedido panelPedido) {
         this.panelPedido = panelPedido;
     }
@@ -156,5 +153,11 @@ public class Pedido implements Runnable {
     public void setNumeroPedido(int numeroPedido) {
         this.numeroPedido = numeroPedido;
     }
+
+    public ArrayList<Producto> getProductos() {
+        return productos;
+    }
+    
+    
 
 }

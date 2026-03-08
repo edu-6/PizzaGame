@@ -10,7 +10,7 @@ package com.mycompany.pizzaexpress.backend.modelos.partida;
  */
 public class Reloj implements Runnable {
 
-    private int tiempoRestante;
+    private volatile int tiempoRestante;
     private Partida partida;
 
     public Reloj(int tiempoRestante, Partida partida) {
@@ -27,6 +27,7 @@ public class Reloj implements Runnable {
                 Thread.sleep(1000);
 
             } catch (InterruptedException ex) {
+                return;
             }
         }
         this.partida.avisarPartidaTerminada();

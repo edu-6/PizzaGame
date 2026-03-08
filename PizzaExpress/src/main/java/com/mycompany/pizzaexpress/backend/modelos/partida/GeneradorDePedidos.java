@@ -67,9 +67,9 @@ public class GeneradorDePedidos implements Runnable {
             case 1:
                 return reglasPartida.getTiempoNivel1();
             case 2:
-                return reglasPartida.getTiempoNivel1();
+                return reglasPartida.getTiempoNivel2();
             case 3:
-                return reglasPartida.getTiempoNivel1();
+                return reglasPartida.getTiempoNivel3();
         }
         return 0;
     }

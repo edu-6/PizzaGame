@@ -52,15 +52,11 @@ public class PedidosDB {
         }
     }
     
-    public void  hayProductos(int idSucursal) throws ExceptionGenerica{
+    public boolean  hayProductos(int idSucursal) throws ExceptionGenerica{
         try (Connection conn = ConexionDB.getConnection(); PreparedStatement pstmt = conn.prepareStatement(HAY_PRODUCTOS)) {
             pstmt.setInt(1, idSucursal);
             ResultSet rs = pstmt.executeQuery();
-           if(rs.next()){
-               
-           }else{
-               throw new ExceptionGenerica("No hay productos en la sucursal");
-           }
+            return rs.next();
         } catch (SQLException e) {
             throw new ExceptionGenerica("Error al verificar existencia de productos");
         }

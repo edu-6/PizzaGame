@@ -52,6 +52,7 @@ public class PanelPartida extends javax.swing.JPanel {
         }
     }
     
+    
     public void actualizarTiempo(int tiempo){
         this.lblTiempo.setText(convertidor.formatearTiempo(tiempo));
     }
@@ -69,6 +70,7 @@ public class PanelPartida extends javax.swing.JPanel {
     public void actualizarEstadisticas(){
         // actualizar tiempo
         this.lblTiempo.setText(convertidor.formatearTiempo(partida.getTiempoRestante()));
+        this.activosLbl.setText(String.valueOf(partida.getPedidosActivos()));
         this.lblCancelados.setText(String.valueOf(partida.getPedidosCancelados()));
         this.lblEntregados.setText(String.valueOf(partida.getPedidosExitosos()));
         this.lblIncompletos.setText(String.valueOf(partida.getPedidosIncompletos()));
@@ -139,6 +141,7 @@ public class PanelPartida extends javax.swing.JPanel {
         puntosLbl1 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
+        lblPuntosNetos1 = new javax.swing.JLabel();
         panelPunteos = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         lblTiempo = new javax.swing.JLabel();
@@ -158,6 +161,8 @@ public class PanelPartida extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         lblPuntosEficiencia = new javax.swing.JLabel();
         terminarBtn = new javax.swing.JButton();
+        lbl2 = new javax.swing.JLabel();
+        activosLbl = new javax.swing.JLabel();
         panelDetalles = new javax.swing.JPanel();
         contenedorPedidos = new javax.swing.JPanel();
 
@@ -210,6 +215,11 @@ public class PanelPartida extends javax.swing.JPanel {
         jLabel13.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setText("Nivel:");
+
+        lblPuntosNetos1.setBackground(new java.awt.Color(0, 0, 0));
+        lblPuntosNetos1.setFont(new java.awt.Font("Fira Sans", 1, 36)); // NOI18N
+        lblPuntosNetos1.setForeground(new java.awt.Color(51, 204, 0));
+        lblPuntosNetos1.setText("0");
 
         panelPunteos.setBackground(new java.awt.Color(255, 204, 102));
 
@@ -302,6 +312,16 @@ public class PanelPartida extends javax.swing.JPanel {
         terminarBtn.setText("TERMINAR");
         terminarBtn.addActionListener(this::terminarBtnActionPerformed);
 
+        lbl2.setBackground(new java.awt.Color(0, 0, 0));
+        lbl2.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
+        lbl2.setForeground(new java.awt.Color(0, 0, 0));
+        lbl2.setText("Activos:");
+
+        activosLbl.setBackground(new java.awt.Color(0, 0, 0));
+        activosLbl.setFont(new java.awt.Font("Fira Sans", 1, 36)); // NOI18N
+        activosLbl.setForeground(new java.awt.Color(102, 0, 204));
+        activosLbl.setText("0");
+
         javax.swing.GroupLayout panelPunteosLayout = new javax.swing.GroupLayout(panelPunteos);
         panelPunteos.setLayout(panelPunteosLayout);
         panelPunteosLayout.setHorizontalGroup(
@@ -335,20 +355,20 @@ public class PanelPartida extends javax.swing.JPanel {
                         .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblTiempo, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelPunteosLayout.createSequentialGroup()
-                                        .addGap(296, 296, 296)
-                                        .addComponent(jLabel10))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPunteosLayout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))))
                                 .addGroup(panelPunteosLayout.createSequentialGroup()
-                                    .addComponent(lbl1)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(lblPuntosNetos, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addGap(30, 30, 30)
+                                    .addGap(296, 296, 296)
+                                    .addComponent(jLabel10))
+                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGroup(panelPunteosLayout.createSequentialGroup()
+                                .addComponent(lbl1)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblPuntosNetos, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbl2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(activosLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(10, 10, 10)
                 .addGroup(panelPunteosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelPunteosLayout.createSequentialGroup()
                         .addComponent(lblEntregados)
@@ -406,7 +426,9 @@ public class PanelPartida extends javax.swing.JPanel {
                             .addComponent(lblPuntosNetos, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(activosLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(53, 53, 53))))
         );
 
@@ -454,6 +476,7 @@ public class PanelPartida extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel activosLbl;
     private javax.swing.JPanel contenedorPedidos;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -470,6 +493,7 @@ public class PanelPartida extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lbl1;
+    private javax.swing.JLabel lbl2;
     private javax.swing.JLabel lblCancelados;
     private javax.swing.JLabel lblEntregados;
     private javax.swing.JLabel lblIncompletos;
@@ -477,6 +501,7 @@ public class PanelPartida extends javax.swing.JPanel {
     private javax.swing.JLabel lblPenalizaciones;
     private javax.swing.JLabel lblPuntosEficiencia;
     private javax.swing.JLabel lblPuntosNetos;
+    private javax.swing.JLabel lblPuntosNetos1;
     private javax.swing.JLabel lblTiempo;
     private javax.swing.JPanel panelDetalles;
     private javax.swing.JPanel panelPunteos;

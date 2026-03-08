@@ -38,7 +38,7 @@ public class Partida implements Runnable {
     private int bonosPorEficiencia;
     private int penalizaciones;
     private int puntosTotales;
-
+    
     private volatile boolean partidaEnCurso = true;
 
     public Partida(ConfiguracionDePartida reglasPartida, ConfiguracionPunteos reglasPunteo) {
@@ -57,37 +57,28 @@ public class Partida implements Runnable {
         hiloGenerador.start();
     }
 
-    // metodos para el fin de partida
+    
     public void cancelarPartida() {
         this.partidaEnCurso = false;
-        if (this.reloj != null) {
-            this.reloj.acabarTiempo();
-        }
-        if (this.hiloReloj != null) {
-            this.hiloReloj.interrupt();
-        }
+        this.reloj.acabarTiempo();
+        this.hiloReloj.interrupt();
     }
 
     public boolean isPartidaEnCurso() {
         return partidaEnCurso;
     }
-
-    public boolean yaTerminoDeContar() {
-        return this.numeroPedidos == this.pedidosContados;
-    }
-
     public void avisarPartidaTerminada() {
-        this.partidaEnCurso = false;
         this.panelPartida.irAlPanelFinPartida();
     }
 
     public void agregarNuevoPedido(Pedido pedido) {
-        System.out.println("Agregó #"+pedido.getNumeroPedido());
+        //System.out.println("Agregó #"+pedido.getNumeroPedido());
         pedidosActivos++;
         numeroPedidos++;
         pedido.setNumeroPedido(numeroPedidos);
         this.listaPedidos.add(pedido);
         this.panelPartida.agregarNuevoPedido(pedido);
+        this.panelPartida.actualizarEstadisticas();
     }
 
     public int getCantidadPedidosActivos() {
@@ -124,7 +115,7 @@ public class Partida implements Runnable {
      * @param pedido
      */
     public void ProcesarPedidoFinalizado(Pedido pedido) {
-        System.out.println("Contabilizado #"+pedido.getNumeroPedido());
+        //System.out.println("Contabilizado #"+pedido.getNumeroPedido());
         pedidosContados++;
         pedidosActivos--;
         if (pedido.isCancelado()) {
@@ -190,4 +181,15 @@ public class Partida implements Runnable {
     public int getTiempoRestante() {
         return this.reloj.getTiempoRestante();
     }
+
+    public void setPartidaEnCurso(boolean partidaEnCurso) {
+        this.partidaEnCurso = partidaEnCurso;
+    }
+
+    public int getPedidosActivos() {
+        return pedidosActivos;
+    }
+    
 }
+    
+

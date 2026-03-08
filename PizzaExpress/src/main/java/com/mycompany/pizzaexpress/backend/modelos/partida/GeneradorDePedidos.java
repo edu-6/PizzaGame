@@ -53,7 +53,7 @@ public class GeneradorDePedidos implements Runnable {
                     pedidosDB.obtenerProductosAleatorios(Sesion.getUsuario().getIdSucursal()),
                     relojPartida, partida);
             this.partida.agregarNuevoPedido(pedido);
-            System.out.println("Se generó pedido");
+            //System.out.println("Se generó pedido");
         }
     }
 

@@ -23,24 +23,24 @@ public class Reloj implements Runnable {
         while (tiempoRestante > 0) {
             try {
                 tiempoRestante -= 1000;
-                partida.actualizarTiempoFrontend(tiempoRestante);
                 Thread.sleep(1000);
+                partida.actualizarTiempoFrontend(tiempoRestante);
 
             } catch (InterruptedException ex) {
-                return;
+                Thread.currentThread().interrupt();
+                break;
             }
         }
+        this.partida.setPartidaEnCurso(false);
         this.partida.avisarPartidaTerminada();
     }
-    
+
     public int getTiempoRestante() {
         return tiempoRestante;
     }
 
-    public void acabarTiempo(){
+    public void acabarTiempo() {
         this.tiempoRestante = 0;
     }
-    
-    
-    
+
 }

@@ -47,7 +47,7 @@ public class Pedido implements Runnable {
     @Override
     public void run() {
         while (pedidoEstaVivo()) {
-            System.out.println("No."+ this.getNumeroPedido()+ "vivo");
+            //System.out.println("No."+ this.getNumeroPedido()+ "vivo");
             try {
                 Thread.sleep(1000);
                 tiempoRestante -= 1000;

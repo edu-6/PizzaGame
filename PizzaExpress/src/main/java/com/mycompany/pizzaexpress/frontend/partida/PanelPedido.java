@@ -64,9 +64,6 @@ public class PanelPedido extends javax.swing.JPanel {
                 this.btnAvanzar.setEnabled(false);
                 nombre = "entregado.png";
                 break;
-            case CANCELADO:
-                nombre = "cancelar.png";
-                break;
             case NO_ENTREGADO:
                 nombre = "reporte.png";
                 break;
@@ -93,7 +90,7 @@ public class PanelPedido extends javax.swing.JPanel {
     }
 
     private void cancelarPedido() {
-        pedido.setActivo(false);
+        pedido.cancelar();
     }
 
     @SuppressWarnings("unchecked")

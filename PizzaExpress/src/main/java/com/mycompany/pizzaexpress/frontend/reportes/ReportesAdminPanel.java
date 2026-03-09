@@ -195,7 +195,7 @@ public class ReportesAdminPanel extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Fira Sans", 0, 48)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Reportes Sucursal");
+        jLabel1.setText("Reportes admin");
 
         regresarBtn.setBackground(new java.awt.Color(255, 51, 51));
         regresarBtn.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N

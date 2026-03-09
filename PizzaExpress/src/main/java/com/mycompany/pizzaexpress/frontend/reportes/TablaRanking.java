@@ -33,6 +33,7 @@ public class TablaRanking extends javax.swing.JPanel {
             Object[] fila = new Object[7];
             fila[0] = p.getNombreSucursal();
             fila[1] = p.getNombre();
+            fila[2] = p.getNickname();
             fila[3] = p.getMaxNivel();
             fila[4] = p.getPartidasJugadas();
             fila[5] = p.getPuntosAcumulados();

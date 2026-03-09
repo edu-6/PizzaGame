@@ -64,7 +64,7 @@ public class PanelPartida extends javax.swing.JPanel {
     
     private void cancelarPartidaEnCurso(){
         this.partida.cancelarPartida();
-        this.irAlPanelFinPartida();
+        //this.irAlPanelFinPartida();
     }
     
     public void actualizarEstadisticas(){

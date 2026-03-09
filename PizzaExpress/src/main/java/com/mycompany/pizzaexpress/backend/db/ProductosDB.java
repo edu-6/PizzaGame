@@ -106,6 +106,22 @@ import java.util.ArrayList;
         }
         return null;
     }
+    
+    
+    public void agregarVecesProductos(ArrayList<Producto> productos) throws ExceptionGenerica {
+    try (Connection conexión = ConexionDB.getConnection(); 
+         PreparedStatement ps = conexión.prepareStatement("UPDATE producto SET veces_pedidas = veces_pedidas + 1 WHERE id_producto = ?")) {
+        
+        for (Producto producto : productos) {
+            ps.setInt(1, producto.getId());
+            ps.addBatch();
+        }
+        ps.executeBatch();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        throw new ExceptionGenerica("Error al actualizar el contador de producto " + e.getMessage());
+    }
+}
 
 }
 

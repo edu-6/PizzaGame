@@ -6,6 +6,7 @@ package com.mycompany.pizzaexpress.backend.modelos.partida;
 
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionDePartida;
 import com.mycompany.pizzaexpress.backend.modelos.ConfiguracionPunteos;
+import com.mycompany.pizzaexpress.backend.modelos.Sesion;
 import com.mycompany.pizzaexpress.frontend.partida.PanelPartida;
 import java.util.ArrayList;
 
@@ -31,6 +32,8 @@ public class Partida implements Runnable {
     private int pedidosContados;
 
     // atributos para la db
+    private int idUsuario; 
+    private int idSucursal;
     private int puntosPositivos;
     private int pedidosExitosos;
     private int pedidosIncompletos;
@@ -44,6 +47,8 @@ public class Partida implements Runnable {
     public Partida(ConfiguracionDePartida reglasPartida, ConfiguracionPunteos reglasPunteo) {
         this.reglasPartida = reglasPartida;
         this.reglasPunteo = reglasPunteo;
+        this.idUsuario = Sesion.getUsuario().getId();
+        this.idSucursal = Sesion.getUsuario().getIdSucursal();
     }
 
     @Override
@@ -189,6 +194,16 @@ public class Partida implements Runnable {
     public int getPedidosActivos() {
         return pedidosActivos;
     }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public int getIdSucursal() {
+        return idSucursal;
+    }
+    
+    
     
 }
     

@@ -12,8 +12,7 @@ public class PartidaReporte {
     private String nickname;
     private String nombreUsuario;
     private int idPartida;
-    private int idUsuario;
-    private int idSucursal;
+    private String nombreSucursal;
     private String fecha;
     private int nivelAlcanzado;
     private int pedidosExitosos;
@@ -23,12 +22,11 @@ public class PartidaReporte {
     private int penalizaciones;
     private int puntosTotales;
 
-    public PartidaReporte(String nickname, String nombreUsuario, int idPartida, int idUsuario, int idSucursal, String fecha, int nivelAlcanzado, int pedidosExitosos, int pedidosIncompletos, int pedidosCancelados, int bonosEficiencia, int penalizaciones, int puntosTotales) {
+    public PartidaReporte(String nickname, String nombreUsuario, int idPartida, String nombreSucursal, String fecha, int nivelAlcanzado, int pedidosExitosos, int pedidosIncompletos, int pedidosCancelados, int bonosEficiencia, int penalizaciones, int puntosTotales) {
         this.nickname = nickname;
         this.nombreUsuario = nombreUsuario;
         this.idPartida = idPartida;
-        this.idUsuario = idUsuario;
-        this.idSucursal = idSucursal;
+        this.nombreSucursal = nombreSucursal;
         this.fecha = fecha;
         this.nivelAlcanzado = nivelAlcanzado;
         this.pedidosExitosos = pedidosExitosos;
@@ -51,15 +49,14 @@ public class PartidaReporte {
         return idPartida;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
-    }
-
-    public int getIdSucursal() {
-        return idSucursal;
+    public String getNombreSucursal() {
+        return nombreSucursal;
     }
 
     public String getFecha() {
+        if (this.fecha != null && this.fecha.length() >= 10) {
+            return this.fecha.substring(0, 10);
+        }
         return fecha;
     }
 
@@ -90,6 +87,8 @@ public class PartidaReporte {
     public int getPuntosTotales() {
         return puntosTotales;
     }
+
+   
     
     
 

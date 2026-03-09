@@ -48,6 +48,16 @@ public class ReportesJugadoresDB implements BuscarTodos<UsuarioReporte>, Busqued
                 rs.getString("nombre_sucursal")
         );
     }
+    
+    public ArrayList<UsuarioReporte> generarRankingGlobal() throws ExceptionGenerica {
+        return this.seleccionarTodos();
+    }
+    public ArrayList<UsuarioReporte> generarRankingSucursal(int idSucursal) throws ExceptionGenerica {
+        return this.buscarConUnParametroInt(idSucursal);
+    
+    }
+    
+    
 
     @Override
     public ArrayList<UsuarioReporte> seleccionarTodos() throws ExceptionGenerica {

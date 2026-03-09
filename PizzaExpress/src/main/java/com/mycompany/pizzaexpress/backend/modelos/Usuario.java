@@ -37,7 +37,8 @@ public class Usuario {
     }
     
 
-    public Usuario(String rol, String nickname) {
+    public Usuario(String rol, String nickname, int id) {
+        this.id = id;
         this.rol = rol;
         this.nickname = nickname;
     }

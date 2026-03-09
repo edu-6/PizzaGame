@@ -5,6 +5,7 @@
 package com.mycompany.pizzaexpress.frontend.panels_por_rol.super_admin;
 
 import com.mycompany.pizzaexpress.frontend.FrameBase;
+import com.mycompany.pizzaexpress.frontend.reportes.ReportesAdminPanel;
 import com.mycompany.pizzaexpress.frontend.sucursales.SucursalesPanel;
 import com.mycompany.pizzaexpress.frontend.usuarios.UsuariosPanel;
 import java.awt.BorderLayout;
@@ -36,6 +37,10 @@ public class SuperAdminBase extends javax.swing.JPanel {
         this.repaint();
     }
     
+    public void mostrarReportes(){
+        limpiarFrame();
+        this.add(new ReportesAdminPanel(this), BorderLayout.CENTER);
+    }
     
     public void mostrarAjustes(){
         limpiarFrame();

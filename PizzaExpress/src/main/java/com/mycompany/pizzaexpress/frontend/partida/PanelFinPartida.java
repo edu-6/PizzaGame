@@ -4,9 +4,13 @@
  */
 package com.mycompany.pizzaexpress.frontend.partida;
 
+import com.mycompany.pizzaexpress.backend.db.ProductosDB;
+import com.mycompany.pizzaexpress.backend.db.reportes.ReportesPartidasDB;
+import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
 import com.mycompany.pizzaexpress.backend.modelos.partida.Partida;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.cocinero.CocineroPanelBase;
 import java.awt.Color;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 /**
@@ -17,12 +21,17 @@ public class PanelFinPartida extends javax.swing.JPanel {
 
     private Partida partida;
     private CocineroPanelBase panelPadre;
+    private ReportesPartidasDB reportesPartidas;
+    private ProductosDB productosDB;
 
     /**
      * Creates new form PanelFinPartida
      */
     public PanelFinPartida(Partida partida, CocineroPanelBase padre) {
         initComponents();
+        this.reportesPartidas = new ReportesPartidasDB();
+        this.productosDB = new ProductosDB();
+
         this.regresarBtn.setEnabled(false);
         this.partida = partida;
         this.panelPadre = padre;
@@ -30,6 +39,7 @@ public class PanelFinPartida extends javax.swing.JPanel {
         this.lblTitulo.setText(" Espere.....");
 
         Timer timer = new Timer(2200, e -> {
+            this.guardarPartidaYProductos();
             rellenarEstadisticas();
             this.lblTitulo.setForeground(Color.BLACK);
             this.lblTitulo.setText("Partida Terminada");
@@ -37,6 +47,16 @@ public class PanelFinPartida extends javax.swing.JPanel {
         });
         timer.setRepeats(false);
         timer.start();
+    }
+
+    private void guardarPartidaYProductos() {
+        try {
+            this.productosDB.contarProductosEnPedidos(partida.getListaPedidos());
+            this.reportesPartidas.crear(partida);
+        } catch (ExceptionGenerica ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+
     }
 
     private void rellenarEstadisticas() {

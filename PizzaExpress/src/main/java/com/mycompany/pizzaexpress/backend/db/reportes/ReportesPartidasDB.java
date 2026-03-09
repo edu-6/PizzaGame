@@ -28,12 +28,16 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
             + "puntos_bono_eficiencia, penalizaciones, puntos_totales) "
             + "VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String PARTIDAS_EN_SUCURSAL = "SELECT p.*, u.nickname, u.nombre FROM partida p "
+    private static final String PARTIDAS_EN_SUCURSAL = "SELECT p.*, u.nickname, u.nombre, s.nombre AS nombre_sucursal "
+            + "FROM partida p "
             + "JOIN usuario u ON u.id_usuario = p.id_usuario "
+            + "JOIN sucursal s ON p.id_sucursal = s.id_sucursal "
             + "WHERE p.id_sucursal = ? ORDER BY p.puntos_totales DESC";
 
-    private static final String PARTIDAS_GLOBALES = "SELECT p.*, u.nickname, u.nombre FROM partida p "
+    private static final String PARTIDAS_GLOBALES = "SELECT p.*, u.nickname, u.nombre, s.nombre AS nombre_sucursal "
+            + "FROM partida p "
             + "JOIN usuario u ON u.id_usuario = p.id_usuario "
+            + "JOIN sucursal s ON p.id_sucursal = s.id_sucursal "
             + "ORDER BY p.puntos_totales DESC";
 
     public ArrayList<PartidaReporte> buscarTodasLasPartidas() throws ExceptionGenerica {
@@ -46,8 +50,7 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
 
     @Override
     public void crear(Partida entidad) throws ExceptionGenerica {
-        try (Connection conexión = ConexionDB.getConnection(); 
-             PreparedStatement ps = conexión.prepareStatement(GUARDAR_PARTIDA)) {
+        try (Connection conexión = ConexionDB.getConnection(); PreparedStatement ps = conexión.prepareStatement(GUARDAR_PARTIDA)) {
             ps.setInt(1, entidad.getIdUsuario());
             ps.setInt(2, entidad.getIdSucursal());
             ps.setInt(3, entidad.getNivelActual());
@@ -66,9 +69,7 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
     @Override
     public ArrayList<PartidaReporte> seleccionarTodos() throws ExceptionGenerica {
         ArrayList<PartidaReporte> lista = new ArrayList<>();
-        try (Connection conexión = ConexionDB.getConnection(); 
-             PreparedStatement ps = conexión.prepareStatement(PARTIDAS_GLOBALES); 
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conexión = ConexionDB.getConnection(); PreparedStatement ps = conexión.prepareStatement(PARTIDAS_GLOBALES); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 lista.add(extraer(rs));
             }
@@ -81,8 +82,7 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
     @Override
     public ArrayList<PartidaReporte> buscarConUnParametroInt(int param) throws ExceptionGenerica {
         ArrayList<PartidaReporte> lista = new ArrayList<>();
-        try (Connection conexión = ConexionDB.getConnection(); 
-             PreparedStatement ps = conexión.prepareStatement(PARTIDAS_EN_SUCURSAL)) {
+        try (Connection conexión = ConexionDB.getConnection(); PreparedStatement ps = conexión.prepareStatement(PARTIDAS_EN_SUCURSAL)) {
             ps.setInt(1, param);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -94,14 +94,13 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
             throw new ExceptionGenerica("Error al buscar las partidas por sucursal " + e.getMessage());
         }
     }
-    
+
     private PartidaReporte extraer(ResultSet rs) throws SQLException {
         return new PartidaReporte(
                 rs.getString("nickname"),
                 rs.getString("nombre"),
                 rs.getInt("id_partida"),
-                rs.getInt("id_usuario"),
-                rs.getInt("id_sucursal"),
+                rs.getString("nombre_sucursal"),
                 rs.getString("fecha"),
                 rs.getInt("nivel_alcanzado"),
                 rs.getInt("pedidos_exitosos"),
@@ -112,5 +111,5 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
                 rs.getInt("puntos_totales")
         );
     }
-    
+
 }

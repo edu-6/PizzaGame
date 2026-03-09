@@ -158,7 +158,7 @@ public class TenderoPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void reportesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportesBtnActionPerformed
-        
+        this.padre.mostrarReportes();
     }//GEN-LAST:event_reportesBtnActionPerformed
 
     private void productosBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productosBtnActionPerformed

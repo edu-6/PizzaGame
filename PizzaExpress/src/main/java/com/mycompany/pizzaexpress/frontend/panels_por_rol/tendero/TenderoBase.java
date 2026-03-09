@@ -5,6 +5,7 @@
 package com.mycompany.pizzaexpress.frontend.panels_por_rol.tendero;
 import com.mycompany.pizzaexpress.frontend.FrameBase;
 import com.mycompany.pizzaexpress.frontend.productos.ProductosPanel;
+import com.mycompany.pizzaexpress.frontend.reportes.ReportesTenderoPanel;
 import java.awt.BorderLayout;
 
 /**
@@ -38,6 +39,11 @@ public class TenderoBase extends javax.swing.JPanel {
     public void cambiarAProductos(){
         limpiarFrame();
         this.add(new ProductosPanel (this), BorderLayout.CENTER);
+    }
+    
+    public void mostrarReportes(){
+        limpiarFrame();
+        this.add(new ReportesTenderoPanel(this), BorderLayout.CENTER);
     }
     
     

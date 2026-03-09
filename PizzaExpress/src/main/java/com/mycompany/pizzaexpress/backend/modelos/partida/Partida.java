@@ -202,6 +202,12 @@ public class Partida implements Runnable {
     public int getIdSucursal() {
         return idSucursal;
     }
+
+    public ArrayList<Pedido> getListaPedidos() {
+        return listaPedidos;
+    }
+    
+    
     
     
     

@@ -36,7 +36,7 @@ CREATE TABLE usuario (
     rol VARCHAR(50) NOT NULL,
     id_sucursal INT NULL,
     CONSTRAINT fk_usuario_sucursal FOREIGN KEY (id_sucursal) 
-        REFERENCES sucursal(id_sucursal) ON DELETE SET NULL
+        REFERENCES sucursal(id_sucursal) ON DELETE CASCADE
 );
 
 CREATE TABLE producto (
@@ -112,7 +112,7 @@ INSERT INTO configuracion_global (
     puntos_nivel_3, 
     tiempo_entre_pedidos,
     limite_pedidos_activos
-) VALUES (180, 60, 45, 30, 1000, 2500, 15,3);
+) VALUES (180000, 60000, 45000, 30000, 1000, 2500, 15,3);
 
 INSERT INTO configuracion_punteos (
     bono_pedido_correcto, 

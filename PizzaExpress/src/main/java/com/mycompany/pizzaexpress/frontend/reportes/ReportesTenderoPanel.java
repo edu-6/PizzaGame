@@ -7,14 +7,15 @@ package com.mycompany.pizzaexpress.frontend.reportes;
 import com.mycompany.pizzaexpress.backend.db.reportes.ReportesJugadoresDB;
 import com.mycompany.pizzaexpress.backend.db.reportes.ReportesPartidasDB;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
+import com.mycompany.pizzaexpress.backend.exportaciones.ExportadorCSV;
 import com.mycompany.pizzaexpress.backend.modelos.Sesion;
 import com.mycompany.pizzaexpress.backend.modelos.reportes.PartidaReporte;
 import com.mycompany.pizzaexpress.backend.modelos.reportes.UsuarioReporte;
 import com.mycompany.pizzaexpress.frontend.panels_por_rol.tendero.TenderoBase;
-import com.mycompany.pizzaexpress.frontend.reportes.TablaPartidas;
-import com.mycompany.pizzaexpress.frontend.reportes.TablaRanking;
 import java.awt.BorderLayout;
+import java.io.File;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,7 +23,8 @@ import javax.swing.JOptionPane;
  * @author edu
  */
 public class ReportesTenderoPanel extends javax.swing.JPanel {
-
+    private String ultimoReporte ="";
+    private ExportadorCSV exportador;
     private ReportesPartidasDB reportesPartidas;
     private ReportesJugadoresDB reportesJugadores;
     private TenderoBase padre;
@@ -37,6 +39,7 @@ public class ReportesTenderoPanel extends javax.swing.JPanel {
     public ReportesTenderoPanel(TenderoBase panelPadre) {
         initComponents();
         this.padre = panelPadre;
+        this.exportador = new ExportadorCSV();
         this.reportesPartidas = new ReportesPartidasDB();
         this.reportesJugadores = new ReportesJugadoresDB();
         this.idSucursal = Sesion.getUsuario().getIdSucursal();
@@ -57,6 +60,7 @@ public class ReportesTenderoPanel extends javax.swing.JPanel {
 
     private void mostrarRanking() {
         if (usuarios != null) {
+            ultimoReporte = "RANKING";
             ponerLayoutPanel();
             this.panelResultados.add(new TablaRanking(usuarios), BorderLayout.CENTER);
             this.refrescarComponentes();
@@ -65,9 +69,58 @@ public class ReportesTenderoPanel extends javax.swing.JPanel {
 
     private void mostrarPartidas() {
         if (partidas != null) {
+            ultimoReporte = "PARTIDAS";
             ponerLayoutPanel();
             this.panelResultados.add(new TablaPartidas(partidas), BorderLayout.CENTER);
             this.refrescarComponentes();
+        }
+    }
+    
+    private void exportarRanking(){
+        File archivo = obtenerArchivo("Exportar Ranking");
+        if(archivo != null){
+            try {
+                this.exportador.exportarReporteUsuarios(usuarios,archivo);
+            } catch (ExceptionGenerica ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+        }
+    }
+    private void exportarPartidas(){
+        File archivo = obtenerArchivo("Exportar partidas");
+        if(archivo != null){
+            try {
+                 this.exportador.exportarReportePartidas(partidas,archivo);
+            } catch (ExceptionGenerica ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+        }
+        
+    }
+    
+    private File obtenerArchivo(String titulo) {
+        JFileChooser choser = new JFileChooser();
+        choser.setDialogTitle(titulo);
+        int seleccion = choser.showSaveDialog(this);
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            File archivo = choser.getSelectedFile();
+            String rutaCompleta =archivo.getAbsolutePath();
+            if (!rutaCompleta.toLowerCase().endsWith(".csv")) {
+                archivo = new File(rutaCompleta + ".csv");
+            }
+            return archivo;
+        }
+        return null;
+
+    }
+    private void exportarUltimoReporte(){
+        switch (ultimoReporte) {
+            case "RANKING":
+                this.exportarRanking();
+                break;
+            case "PARTIDAS":
+                this.exportarPartidas();
+                break;
         }
     }
     
@@ -153,6 +206,7 @@ public class ReportesTenderoPanel extends javax.swing.JPanel {
         regresarBtn1.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
         regresarBtn1.setForeground(new java.awt.Color(0, 0, 0));
         regresarBtn1.setText("Exportar");
+        regresarBtn1.addActionListener(this::regresarBtn1ActionPerformed);
 
         regresarBtn2.setBackground(new java.awt.Color(204, 204, 204));
         regresarBtn2.setFont(new java.awt.Font("Fira Sans", 0, 36)); // NOI18N
@@ -205,6 +259,10 @@ public class ReportesTenderoPanel extends javax.swing.JPanel {
     private void regresarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarBtnActionPerformed
         this.padre.regresar();
     }//GEN-LAST:event_regresarBtnActionPerformed
+
+    private void regresarBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarBtn1ActionPerformed
+        this.exportarUltimoReporte();
+    }//GEN-LAST:event_regresarBtn1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

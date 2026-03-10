@@ -70,38 +70,16 @@ CREATE TABLE partida (
 
 CREATE TABLE pedido (
     id_pedido INT AUTO_INCREMENT PRIMARY KEY,
-    id_sucursal INT NOT NULL,
     id_partida INT NOT NULL,
-    CONSTRAINT fk_pedido_sucursal FOREIGN KEY (id_sucursal) 
-        REFERENCES sucursal(id_sucursal) ON DELETE CASCADE,
+    recibido BOOLEAN NOT NULL DEFAULT FALSE,
+    preparando BOOLEAN NOT NULL DEFAULT FALSE,
+    en_horno BOOLEAN NOT NULL DEFAULT FALSE,
+    entregado BOOLEAN NOT NULL DEFAULT FALSE,
+    no_entregado BOOLEAN NOT NULL DEFAULT FALSE,
+    cancelado BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_pedido_partida FOREIGN KEY (id_partida) 
         REFERENCES partida(id_partida) ON DELETE CASCADE
 );
-
-CREATE TABLE producto_pedido (
-    id_pedido INT NOT NULL,
-    id_producto INT NOT NULL,
-    cantidad INT NOT NULL,
-    PRIMARY KEY (id_pedido, id_producto),
-    CONSTRAINT fk_pp_pedido FOREIGN KEY (id_pedido) 
-        REFERENCES pedido(id_pedido) ON DELETE CASCADE,
-    CONSTRAINT fk_pp_producto FOREIGN KEY (id_producto) 
-        REFERENCES producto(id_producto) ON DELETE CASCADE
-);
-
-CREATE TABLE tabla_estados (
-    id_estado INT AUTO_INCREMENT PRIMARY KEY,
-    id_pedido INT NOT NULL,
-    recibida BOOLEAN DEFAULT FALSE,
-    preparando BOOLEAN DEFAULT FALSE,
-    en_horno BOOLEAN DEFAULT FALSE,
-    entregado BOOLEAN DEFAULT FALSE,
-    no_entregado BOOLEAN DEFAULT FALSE,
-    cancelado BOOLEAN DEFAULT FALSE,
-    CONSTRAINT fk_estados_pedido FOREIGN KEY (id_pedido) 
-    REFERENCES pedido(id_pedido) ON DELETE CASCADE
-);
-
 
 INSERT INTO configuracion_global (
     tiempo_partida, 

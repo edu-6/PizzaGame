@@ -4,6 +4,7 @@
  */
 package com.mycompany.pizzaexpress.frontend.partida;
 
+import com.mycompany.pizzaexpress.backend.db.PedidosDB;
 import com.mycompany.pizzaexpress.backend.db.ProductosDB;
 import com.mycompany.pizzaexpress.backend.db.reportes.ReportesPartidasDB;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
@@ -23,6 +24,7 @@ public class PanelFinPartida extends javax.swing.JPanel {
     private CocineroPanelBase panelPadre;
     private ReportesPartidasDB reportesPartidas;
     private ProductosDB productosDB;
+    private PedidosDB pedidosDB;
 
     /**
      * Creates new form PanelFinPartida
@@ -53,6 +55,8 @@ public class PanelFinPartida extends javax.swing.JPanel {
         try {
             this.productosDB.contarProductosEnPedidos(partida.getListaPedidos());
             this.reportesPartidas.crear(partida);
+            partida.setId_partida(reportesPartidas.obtenerIdUltimaPartida());
+            this.pedidosDB.registrarPedidosPartida(partida);
         } catch (ExceptionGenerica ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }

@@ -157,6 +157,24 @@ public class Pedido implements Runnable {
     public ArrayList<Producto> getProductos() {
         return productos;
     }
+
+    public Partida getPartida() {
+        return partida;
+    }
+
+    public boolean isRecibido() {
+        return recibido;
+    }
+
+    public boolean isPreparando() {
+        return preparando;
+    }
+
+    public boolean isEnHorno() {
+        return enHorno;
+    }
+    
+    
     
     
 

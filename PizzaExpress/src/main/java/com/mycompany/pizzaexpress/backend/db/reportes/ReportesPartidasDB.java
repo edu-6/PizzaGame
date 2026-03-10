@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos<PartidaReporte>,
         BusquedaConParametroInt<PartidaReporte> , BusquedaParametrica<Usuario,PartidaReporte> {
     
-
+    private static final String OBTENER_ID_ULTIMA_PARTIDA = "SELECT LAST_INSERT_ID()";
 
     private static final String GUARDAR_PARTIDA = "INSERT INTO partida (id_usuario, id_sucursal, fecha, nivel_alcanzado, "
             + "pedidos_exitosos, pedidos_incompletos, pedidos_cancelados, "
@@ -138,6 +138,20 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
         } catch (SQLException e) {
             throw new ExceptionGenerica("Error al buscar las partidas " + e.getMessage());
         }
+    }
+    
+    
+    public int  obtenerIdUltimaPartida() throws ExceptionGenerica{
+        try (Connection conexión = ConexionDB.getConnection(); PreparedStatement ps = conexión.prepareStatement(OBTENER_ID_ULTIMA_PARTIDA)) {
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+            throw new ExceptionGenerica("Error al buscar id de la ultima partida");
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al buscar las partidas " + e.getMessage());
+        }
+        
     }
 
 }

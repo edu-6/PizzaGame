@@ -8,6 +8,7 @@ import com.mycompany.pizzaexpress.backend.modelos.partida.Partida;
 import com.mycompany.pizzaexpress.frontend.FrameBase;
 import com.mycompany.pizzaexpress.frontend.partida.PanelFinPartida;
 import com.mycompany.pizzaexpress.frontend.partida.PanelPartida;
+import com.mycompany.pizzaexpress.frontend.reportes.ReportesCocineroPanel;
 import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
 
@@ -52,6 +53,14 @@ public class CocineroPanelBase extends javax.swing.JPanel {
         this.iniciarPanel();
         JOptionPane.showMessageDialog(padre, mensaje);
         
+    }
+    
+    public void mostrarHistorial(){
+        this.limpiarFrame();
+        limpiarFrame();
+        this.add(new ReportesCocineroPanel(this), BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
     }
     
     public void mostrarPanelNuevaPartida(){

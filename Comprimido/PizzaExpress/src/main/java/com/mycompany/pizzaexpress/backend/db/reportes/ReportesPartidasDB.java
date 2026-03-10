@@ -6,9 +6,11 @@ package com.mycompany.pizzaexpress.backend.db.reportes;
 
 import com.mycompany.pizzaexpress.backend.crudIntefaces.BuscarTodos;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.BusquedaConParametroInt;
+import com.mycompany.pizzaexpress.backend.crudIntefaces.BusquedaParametrica;
 import com.mycompany.pizzaexpress.backend.crudIntefaces.CreacionEntidad;
 import com.mycompany.pizzaexpress.backend.db.ConexionDB;
 import com.mycompany.pizzaexpress.backend.exceptions.ExceptionGenerica;
+import com.mycompany.pizzaexpress.backend.modelos.Usuario;
 import com.mycompany.pizzaexpress.backend.modelos.partida.Partida;
 import com.mycompany.pizzaexpress.backend.modelos.reportes.PartidaReporte;
 import java.sql.Connection;
@@ -21,7 +23,10 @@ import java.util.ArrayList;
  *
  * @author edu
  */
-public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos<PartidaReporte>, BusquedaConParametroInt<PartidaReporte> {
+public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos<PartidaReporte>,
+        BusquedaConParametroInt<PartidaReporte> , BusquedaParametrica<Usuario,PartidaReporte> {
+    
+    private static final String OBTENER_ID_ULTIMA_PARTIDA = "SELECT LAST_INSERT_ID()";
 
     private static final String GUARDAR_PARTIDA = "INSERT INTO partida (id_usuario, id_sucursal, fecha, nivel_alcanzado, "
             + "pedidos_exitosos, pedidos_incompletos, pedidos_cancelados, "
@@ -39,6 +44,13 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
             + "JOIN usuario u ON u.id_usuario = p.id_usuario "
             + "JOIN sucursal s ON p.id_sucursal = s.id_sucursal "
             + "ORDER BY p.puntos_totales DESC";
+    
+    private static final String HISTORIAL_USUARIO_SUCURSAL = "SELECT p.*, u.nickname, u.nombre, s.nombre AS nombre_sucursal "
+            + "FROM partida p "
+            + "JOIN usuario u ON u.id_usuario = p.id_usuario "
+            + "JOIN sucursal s ON p.id_sucursal = s.id_sucursal "
+            + "WHERE p.id_sucursal = ? "
+            + "AND u.id_usuario = ? ORDER BY p.fecha DESC";
 
     public ArrayList<PartidaReporte> buscarTodasLasPartidas() throws ExceptionGenerica {
         return this.seleccionarTodos();
@@ -110,6 +122,36 @@ public class ReportesPartidasDB implements CreacionEntidad<Partida>, BuscarTodos
                 rs.getInt("penalizaciones"),
                 rs.getInt("puntos_totales")
         );
+    }
+
+    @Override
+    public ArrayList<PartidaReporte> buscarVariosConFiltro(Usuario busqueda) throws ExceptionGenerica {
+        ArrayList<PartidaReporte> lista = new ArrayList<>();
+        try (Connection conexión = ConexionDB.getConnection(); PreparedStatement ps = conexión.prepareStatement(HISTORIAL_USUARIO_SUCURSAL)) {
+            ps.setInt(1, busqueda.getIdSucursal());
+            ps.setInt(2, busqueda.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                lista.add(extraer(rs));
+            }
+            return lista;
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al buscar las partidas " + e.getMessage());
+        }
+    }
+    
+    
+    public int  obtenerIdUltimaPartida() throws ExceptionGenerica{
+        try (Connection conexión = ConexionDB.getConnection(); PreparedStatement ps = conexión.prepareStatement(OBTENER_ID_ULTIMA_PARTIDA)) {
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+            throw new ExceptionGenerica("Error al buscar id de la ultima partida");
+        } catch (SQLException e) {
+            throw new ExceptionGenerica("Error al buscar las partidas " + e.getMessage());
+        }
+        
     }
 
 }

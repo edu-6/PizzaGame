@@ -32,6 +32,7 @@ public class Partida implements Runnable {
     private int pedidosContados;
 
     // atributos para la db
+    private int id_partida;
     private int idUsuario; 
     private int idSucursal;
     private int puntosPositivos;
@@ -77,7 +78,6 @@ public class Partida implements Runnable {
     }
 
     public void agregarNuevoPedido(Pedido pedido) {
-        //System.out.println("Agregó #"+pedido.getNumeroPedido());
         pedidosActivos++;
         numeroPedidos++;
         pedido.setNumeroPedido(numeroPedidos);
@@ -120,7 +120,6 @@ public class Partida implements Runnable {
      * @param pedido
      */
     public void ProcesarPedidoFinalizado(Pedido pedido) {
-        //System.out.println("Contabilizado #"+pedido.getNumeroPedido());
         pedidosContados++;
         pedidosActivos--;
         if (pedido.isCancelado()) {
@@ -206,10 +205,14 @@ public class Partida implements Runnable {
     public ArrayList<Pedido> getListaPedidos() {
         return listaPedidos;
     }
-    
-    
-    
-    
+
+    public int getId_partida() {
+        return id_partida;
+    }
+
+    public void setId_partida(int id_partida) {
+        this.id_partida = id_partida;
+    }
     
 }
     

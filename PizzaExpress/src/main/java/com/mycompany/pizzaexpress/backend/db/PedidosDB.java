@@ -87,14 +87,14 @@ public class PedidosDB {
         try (Connection conn = ConexionDB.getConnection(); PreparedStatement ps = conn.prepareStatement(REGISTRAR_PEDIDO)) {
             ps.setInt(1, idPartida);
             ps.setBoolean(2, true);
-            ps.setBoolean(2, pedido.isPreparando());
-            ps.setBoolean(2, pedido.isEnHorno());
-            ps.setBoolean(2, pedido.isEntregado());
-            ps.setBoolean(2, pedido.isNoEntregado());
-            ps.setBoolean(2, pedido.isCancelado());
+            ps.setBoolean(3, pedido.isPreparando());
+            ps.setBoolean(4, pedido.isEnHorno());
+            ps.setBoolean(5, pedido.isEntregado());
+            ps.setBoolean(6, pedido.isNoEntregado());
+            ps.setBoolean(7, pedido.isCancelado());
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new ExceptionGenerica("Error al guardar el pedido");
+            throw new ExceptionGenerica("Error al guardar el pedido"+ e.getMessage());
         }
     }
 

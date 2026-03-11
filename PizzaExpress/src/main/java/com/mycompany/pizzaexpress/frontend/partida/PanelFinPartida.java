@@ -31,6 +31,7 @@ public class PanelFinPartida extends javax.swing.JPanel {
      */
     public PanelFinPartida(Partida partida, CocineroPanelBase padre) {
         initComponents();
+        this.pedidosDB = new PedidosDB();
         this.reportesPartidas = new ReportesPartidasDB();
         this.productosDB = new ProductosDB();
 
@@ -55,7 +56,6 @@ public class PanelFinPartida extends javax.swing.JPanel {
         try {
             this.productosDB.contarProductosEnPedidos(partida.getListaPedidos());
             this.reportesPartidas.crear(partida);
-            partida.setId_partida(reportesPartidas.obtenerIdUltimaPartida());
             this.pedidosDB.registrarPedidosPartida(partida);
         } catch (ExceptionGenerica ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
